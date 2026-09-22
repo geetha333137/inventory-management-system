@@ -1,0 +1,71 @@
+@model IEnumerable<InventoryManagementSystem.Modules.Permission>
+
+@{
+    ViewData["Title"] = "Permissions";
+}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+
+        <h2>Permission Management</h2>
+
+        <p class="text-muted">
+            View the permissions available in the system.
+        </p>
+
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No permissions have been created.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Permission</th>
+                        <th>Description</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var permission in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                @permission.Id
+                            </td>
+
+                            <td>
+                                <strong>
+                                    @permission.Name
+                                </strong>
+                            </td>
+
+                            <td>
+                                @(permission.Description ?? "-")
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>

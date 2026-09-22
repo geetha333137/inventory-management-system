@@ -1,0 +1,101 @@
+@model IEnumerable<InventoryManagementSystem.Modules.Role>
+
+@{
+    ViewData["Title"] = "Role Management";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Role Management</h2>
+            <p class="text-muted">
+                Manage application roles and their permissions.
+            </p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-primary">
+            + Create Role
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No roles have been created yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Role Name</th>
+                        <th>Description</th>
+                        <th>Permissions</th>
+                        <th style="width: 220px;">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var role in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                <strong>@role.Name</strong>
+                            </td>
+
+                            <td>
+                                @(role.Description ?? "-")
+                            </td>
+
+                            <td>
+                                @if (role.RolePermissions != null &&
+                                     role.RolePermissions.Any())
+                                {
+                                    foreach (var rolePermission
+                                        in role.RolePermissions)
+                                    {
+                                        <span class="badge bg-secondary me-1 mb-1">
+                                            @rolePermission.Permission.Name
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        No permissions
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@role.Id"
+                                   class="btn btn-sm btn-warning">
+                                    Edit
+                                </a>
+
+                                <a asp-action="Permissions"
+                                   asp-route-id="@role.Id"
+                                   class="btn btn-sm btn-primary">
+                                    Permissions
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    }
+
+</div>

@@ -1,0 +1,112 @@
+@model InventoryManagementSystem.ViewModels.RoleViewModel
+
+@{
+    ViewData["Title"] = "Manage Permissions";
+}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+
+        <h2>Manage Permissions</h2>
+
+        <p class="text-muted">
+            Select the permissions that should be assigned to this role.
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+                Role: @Model.Name
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Permissions"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.Id" />
+
+                @if (!Model.Permissions.Any())
+                {
+                    <div class="alert alert-warning">
+                        No permissions are available.
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+
+                        @foreach (var permission in Model.Permissions)
+                        {
+                            <div class="col-md-6 mb-3">
+
+                                <div class="form-check">
+
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="selectedPermissionIds"
+                                           value="@permission.Id"
+                                           id="permission_@permission.Id"
+                                           @(permission.IsSelected
+                                               ? "checked"
+                                               : "") />
+
+                                    <label class="form-check-label"
+                                           for="permission_@permission.Id">
+
+                                        <strong>
+                                            @permission.Name
+                                        </strong>
+
+                                        @if (!string.IsNullOrEmpty(
+                                            permission.Description))
+                                        {
+                                            <br />
+
+                                            <small class="text-muted">
+                                                @permission.Description
+                                            </small>
+                                        }
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+
+                <div class="mt-4">
+
+                    <button type="submit"
+                            class="btn btn-success">
+                        Save Permissions
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
