@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="content-card dashboard-card">
+    <p class="eyebrow">Workspace overview</p>
+    <h1>Welcome back, @User.Identity?.Name.</h1>
+    <p class="helper-text">You are signed in and ready to manage your inventory operations.</p>
+
+    <div class="detail-list">
+        <div class="detail-item">
+            <span class="detail-label">Signed in as</span>
+            <strong>@User.Identity?.Name</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Role</span>
+            <strong>@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</strong>
+        </div>
+    </div>
+
+    <a href="/Account/ChangePassword">Change password</a>
+</div>

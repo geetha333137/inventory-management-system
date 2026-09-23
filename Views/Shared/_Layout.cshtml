@@ -64,31 +64,57 @@
 
                 <div class="main-navigation" id="mainNavigation">
 
-    <a href="/#features">
-        Features
-    </a>
+                    <a href="/#features">
+                        Features
+                    </a>
 
-    <a href="/#resources">
-        Resources
-    </a>
+                    <a href="/#resources">
+                        Resources
+                    </a>
 
-    <a href="/#about">
-        About Us
-    </a>
+                    <a href="/#about">
+                        About Us
+                    </a>
 
-    <span class="search-icon">
-        🔍
-    </span>
+                    <span class="search-icon">
+                        🔍
+                    </span>
 
-    <a class="navbar-login"
-       href="#">
 
-        <span>👤</span>
-        Login
+                    <!-- LOGIN / LOGOUT -->
 
-    </a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <form asp-controller="Account"
+                              asp-action="Logout"
+                              method="post"
+                              style="display:inline;">
 
-</div>
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="navbar-login">
+
+                                <span>👤</span>
+                                Logout
+
+                            </button>
+
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="navbar-login"
+                           asp-controller="Account"
+                           asp-action="Login">
+
+                            <span>👤</span>
+                            Login
+
+                        </a>
+                    }
+
+                </div>
 
             </div>
 
