@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - Inventory Management System
+    </title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header>
+
+        <nav class="main-navbar">
+
+            <div class="navbar-container">
+
+                <!-- LOGO / PROJECT NAME -->
+
+                <a class="brand-logo"
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <div class="brand-icon">
+                        📋
+                    </div>
+
+                    <div class="brand-text">
+                        <span>Inventory</span>
+                        <span>Management System</span>
+                    </div>
+
+                </a>
+
+
+                <!-- MOBILE MENU BUTTON -->
+
+                <button class="mobile-menu-button"
+                        type="button"
+                        onclick="toggleMenu()">
+
+                    ☰
+
+                </button>
+
+
+                <!-- NAVIGATION -->
+
+                <div class="main-navigation" id="mainNavigation">
+
+    <a href="/#features">
+        Features
+    </a>
+
+    <a href="/#resources">
+        Resources
+    </a>
+
+    <a href="/#about">
+        About Us
+    </a>
+
+    <span class="search-icon">
+        🔍
+    </span>
+
+    <a class="navbar-login"
+       href="#">
+
+        <span>👤</span>
+        Login
+
+    </a>
+
+</div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ================= PAGE CONTENT ================= -->
+
+    <main role="main">
+
+        @RenderBody()
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="main-footer">
+
+        <div class="footer-container">
+
+            <div>
+                © 2026 Inventory Management System
+            </div>
+
+            <div>
+                Manage your inventory efficiently and securely.
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ================= SCRIPTS ================= -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    <script>
+
+        function toggleMenu() {
+
+            const menu =
+                document.getElementById("mainNavigation");
+
+            menu.classList.toggle("show");
+
+        }
+
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>
