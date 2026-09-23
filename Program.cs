@@ -19,8 +19,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Home/Index");
+    return Task.CompletedTask;
+});
 
+app.UseAuthorization();
 // MVC routing
 app.MapControllerRoute(
     name: "default",
