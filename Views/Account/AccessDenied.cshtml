@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="content-card">
+    <p class="eyebrow">Restricted area</p>
+    <h1>Access denied</h1>
+    <p class="helper-text">You do not have permission to access this page.</p>
+    <div class="detail-list">
+        <div class="detail-item">
+            <span class="detail-label">Current user</span>
+            <strong>@User.Identity?.Name</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Role</span>
+            <strong>@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</strong>
+        </div>
+    </div>
+    <a href="/Home/Dashboard">Return to dashboard</a>
+</div>
