@@ -1,0 +1,408 @@
+@model OrganisationProfile.OrganisationProfile.Models.Organisation
+
+@{
+    ViewData["Title"] = "Edit Organisation Profile";
+}
+
+<div class="organisation-form-page">
+
+    <!-- Page Header -->
+    <div class="organisation-form-header">
+
+        <div>
+            <div class="organisation-breadcrumb">
+                Administration / Organisation Profile / Edit
+            </div>
+
+            <h1>Edit Organisation Profile</h1>
+
+            <p>
+                Update your organisation information and contact details.
+            </p>
+        </div>
+
+        <a asp-action="Index" class="organisation-back-btn">
+            ← Back to Profile
+        </a>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="organisation-form-card">
+
+        <form asp-action="Edit"
+              method="post"
+              enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+
+            <!-- Basic Information -->
+            <div class="organisation-form-section">
+
+                <div class="organisation-form-section-title">
+
+                    <span class="form-section-icon">
+                        🏢
+                    </span>
+
+                    <div>
+                        <h3>Basic Information</h3>
+
+                        <p>
+                            Update the basic details of your organisation.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="organisation-form-grid">
+
+                    <div class="form-group">
+
+                        <label asp-for="OrganisationName">
+                            Organisation Name
+                        </label>
+
+                        <input asp-for="OrganisationName"
+                               class="organisation-input"
+                               placeholder="Enter organisation name" />
+
+                        <span asp-validation-for="OrganisationName"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label asp-for="OrganisationCode">
+                            Organisation Code
+                        </label>
+
+                        <input asp-for="OrganisationCode"
+                               class="organisation-input"
+                               placeholder="Example: ORG001" />
+
+                        <span asp-validation-for="OrganisationCode"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Address Information -->
+            <div class="organisation-form-section">
+
+                <div class="organisation-form-section-title">
+
+                    <span class="form-section-icon">
+                        📍
+                    </span>
+
+                    <div>
+                        <h3>Address Information</h3>
+
+                        <p>
+                            Update the registered address.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label asp-for="Address">
+                        Address
+                    </label>
+
+                    <textarea asp-for="Address"
+                              class="organisation-input organisation-textarea"
+                              placeholder="Enter complete address"></textarea>
+
+                    <span asp-validation-for="Address"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <div class="organisation-form-grid">
+
+                    <div class="form-group">
+
+                        <label asp-for="City">
+                            City
+                        </label>
+
+                        <input asp-for="City"
+                               class="organisation-input"
+                               placeholder="Enter city" />
+
+                        <span asp-validation-for="City"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label asp-for="State">
+                            State
+                        </label>
+
+                        <input asp-for="State"
+                               class="organisation-input"
+                               placeholder="Enter state" />
+
+                        <span asp-validation-for="State"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label asp-for="Country">
+                            Country
+                        </label>
+
+                        <input asp-for="Country"
+                               class="organisation-input"
+                               placeholder="Enter country" />
+
+                        <span asp-validation-for="Country"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label asp-for="PostalCode">
+                            Postal Code
+                        </label>
+
+                        <input asp-for="PostalCode"
+                               class="organisation-input"
+                               placeholder="Enter postal code" />
+
+                        <span asp-validation-for="PostalCode"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Contact Information -->
+            <div class="organisation-form-section">
+
+                <div class="organisation-form-section-title">
+
+                    <span class="form-section-icon">
+                        📞
+                    </span>
+
+                    <div>
+                        <h3>Contact Information</h3>
+
+                        <p>
+                            Update the organisation's contact information.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="organisation-form-grid">
+
+                    <div class="form-group">
+
+                        <label asp-for="Phone">
+                            Phone Number
+                        </label>
+
+                        <input asp-for="Phone"
+                               class="organisation-input"
+                               placeholder="Enter phone number" />
+
+                        <span asp-validation-for="Phone"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label asp-for="Email">
+                            Email
+                        </label>
+
+                        <input asp-for="Email"
+                               class="organisation-input"
+                               placeholder="Enter email address" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label asp-for="Website">
+                            Website
+                        </label>
+
+                        <input asp-for="Website"
+                               class="organisation-input"
+                               placeholder="https://example.com" />
+
+                        <span asp-validation-for="Website"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Logo Section -->
+            <div class="organisation-form-section">
+
+                <div class="organisation-form-section-title">
+
+                    <span class="form-section-icon">
+                        🖼️
+                    </span>
+
+                    <div>
+                        <h3>Organisation Logo</h3>
+
+                        <p>
+                            View or replace the current organisation logo.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="current-logo-container">
+
+                    <div class="current-logo-box">
+
+                        @if (!string.IsNullOrEmpty(Model.LogoPath))
+                        {
+                            <img src="@Model.LogoPath"
+                                 alt="Current Organisation Logo"
+                                 class="current-organisation-logo" />
+                        }
+                        else
+                        {
+                            <div class="current-logo-placeholder">
+                                🏢
+                            </div>
+                        }
+
+                    </div>
+
+
+                    <div class="current-logo-details">
+
+                        <strong>
+                            Current Logo
+                        </strong>
+
+                        <span>
+                            Upload a new image below to replace it.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="logo-upload-area edit-logo-upload">
+
+                    <div class="logo-upload-icon">
+                        🖼️
+                    </div>
+
+                    <div class="logo-upload-content">
+
+                        <label for="logoFile"
+                               class="logo-upload-label">
+                            Replace Logo
+                        </label>
+
+                        <input type="file"
+                               id="logoFile"
+                               name="logoFile"
+                               accept=".jpg,.jpeg,.png,.webp"
+                               class="logo-file-input" />
+
+                        <p>
+                            JPG, JPEG, PNG or WEBP · Maximum 2 MB
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="organisation-form-actions">
+
+                <a asp-action="Index"
+                   class="organisation-cancel-btn">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="organisation-save-btn">
+                    ✓ Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

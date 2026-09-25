@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - Organisation Profile
+    </title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/organisation.css"
+          asp-append-version="true" />
+
+</head>
+
+<body>
+
+    <header>
+        <nav class="main-navbar navbar navbar-expand-lg">
+            <div class="navbar-container container-fluid">
+
+                <div class="main-navigation navbar-nav ms-auto" id="mainNavigation">
+                    <a class="nav-item nav-link" asp-controller="Organisation" asp-action="Index">Organisation</a>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div>© 2026 Organisation Profile</div>
+            <div>Manage your organisation profile efficiently and securely.</div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>
