@@ -22,19 +22,22 @@ public class AccountController : Controller
     private readonly IEmailService _emailService;
     private readonly ILogger<AccountController> _logger;
     private readonly AppDbContext _db;
+    private readonly IPermissionService _permissionService;
 
     public AccountController(
         AuthenticationServiceInterface authenticationService,
         IPasswordService passwordService,
         IEmailService emailService,
         ILogger<AccountController> logger,
-        AppDbContext db)
+        AppDbContext db,
+        IPermissionService permissionService)
     {
         _authenticationService = authenticationService;
         _passwordService = passwordService;
         _emailService = emailService;
         _logger = logger;
         _db = db;
+        _permissionService = permissionService;
     }
 
     // =========================================================
@@ -120,9 +123,25 @@ public class AccountController : Controller
             principal,
             authProperties);
 
-        return RedirectToAction(
-            "Dashboard",
-            "Home");
+        if (await _permissionService.HasPermissionAsync(
+            user.Id,
+            "VIEW_ASSET"))
+        {
+            return RedirectToAction(
+            "Index",
+            "Dashboard");
+        }
+
+        if (await _permissionService.HasPermissionAsync(
+            user.Id,
+            "MANAGE_USERS"))
+        {
+            return RedirectToAction(
+            "Index",
+            "Users");
+        }
+
+        return RedirectToAction(nameof(AccessDenied));
     }
 
     // =========================================================

@@ -1,3 +1,4 @@
+using InventoryManagementSystem.Authorization;
 using InventoryManagementSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace InventoryManagementSystem.Controllers
             _dashboardService = dashboardService;
         }
 
+            [PermissionAuthorize("VIEW_ASSET")]
         public async Task<IActionResult> Index()
         {
             ViewData["Title"] = "Inventory Dashboard";

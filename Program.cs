@@ -48,6 +48,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(sqliteConnection));
 builder.Services.AddScoped<IUserService, UserService>();
