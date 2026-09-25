@@ -51,6 +51,7 @@ public static class SeedData
             "CREATE_ASSET",
             "EDIT_ASSET",
             "DELETE_ASSET",
+            "VIEW_CATEGORY",
             "VIEW_REPORT",
             "MANAGE_USERS",
             "MANAGE_ROLES",
@@ -177,6 +178,7 @@ public static class SeedData
             "CREATE_ASSET",
             "EDIT_ASSET",
             "DELETE_ASSET",
+            "VIEW_CATEGORY",
             "VIEW_REPORT",
             "VIEW_NOTIFICATIONS"
         };

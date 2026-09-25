@@ -19,4 +19,6 @@ public sealed class SmtpOptions
     public string FromEmail { get; set; } = "";
 
     public string FromName { get; set; } = "Inventory Management System";
+
+    public string DefaultRecipientEmail { get; set; } = "";
 }

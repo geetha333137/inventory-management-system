@@ -31,13 +31,47 @@ namespace InventoryManagementSystem.Controllers
                 return RedirectToAction(nameof(Create));
             }
 
+            ViewData["Title"] = "StockSphere Organisation";
+            ViewData["PageSubtitle"] = "Organisation identity, contact details and operating information.";
             return View(organisation);
+        }
+
+        public IActionResult Add()
+        {
+            return RedirectToAction(nameof(Create));
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var organisation = await _context.Organisations
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (organisation == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Title"] = "StockSphere Details";
+            ViewData["PageSubtitle"] = "Complete organisation profile information.";
+            return View("Index", organisation);
         }
 
         // SHOW CREATE FORM
         public IActionResult Create()
         {
-            return View();
+            return View(new Organisation
+            {
+                OrganisationName = "StockSphere",
+                OrganisationCode = "STKSPH",
+                Address = "25 Knowledge Park",
+                City = "Hyderabad",
+                State = "Telangana",
+                Country = "India",
+                PostalCode = "500081",
+                Phone = "+91 40 4000 0000",
+                Email = "hello@stocksphere.com",
+                Website = "https://www.stocksphere.com"
+            });
         }
 
         // SAVE NEW ORGANISATION
@@ -183,6 +217,31 @@ namespace InventoryManagementSystem.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Delete(int id)
+{
+    var organisation = await _context.Organisations
+        .FirstOrDefaultAsync(o => o.Id == id);
+
+    if (organisation == null)
+    {
+        TempData["Error"] = "Organisation not found.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    // Delete the uploaded logo file if one exists
+    DeleteLogo(organisation.LogoPath);
+
+    _context.Organisations.Remove(organisation);
+
+    await _context.SaveChangesAsync();
+
+    TempData["Success"] =
+        "Organisation deleted successfully.";
+
+    return RedirectToAction(nameof(Index));
+}
 
         // SAVE LOGO FILE
         private async Task<string?> SaveLogoAsync(

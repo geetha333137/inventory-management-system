@@ -6,6 +6,39 @@ namespace InventoryManagementSystem.Data
     {
         public static void Seed(AppDbContext context)
         {
+            if (!context.Organisations.Any())
+            {
+                context.Organisations.Add(new Organisation
+                {
+                    OrganisationName = "StockSphere",
+                    OrganisationCode = "STKSPH",
+                    Address = "25 Knowledge Park",
+                    City = "Hyderabad",
+                    State = "Telangana",
+                    Country = "India",
+                    PostalCode = "500081",
+                    Phone = "+91 40 4000 0000",
+                    Email = "hello@stocksphere.com",
+                    Website = "https://www.stocksphere.com",
+                    UpdatedBy = "System",
+                    UpdatedDate = DateTime.UtcNow
+                });
+
+                context.SaveChanges();
+            }
+
+            if (!context.InventoryItems.Any())
+            {
+                context.InventoryItems.AddRange(
+                    new InventoryItem { Name = "Dell Latitude 5440", Category = "Laptop", Quantity = 18, Price = 78500 },
+                    new InventoryItem { Name = "HP LaserJet Pro M404", Category = "Printer", Quantity = 6, Price = 28500 },
+                    new InventoryItem { Name = "Dell 24-inch Monitor", Category = "Monitor", Quantity = 24, Price = 14500 },
+                    new InventoryItem { Name = "Ergonomic Office Chair", Category = "Furniture", Quantity = 9, Price = 12500 }
+                );
+
+                context.SaveChanges();
+            }
+
             if (!context.Categories.Any())
             {
                 context.Categories.AddRange(

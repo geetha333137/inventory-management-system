@@ -6,3 +6,4 @@ obj/
 notifications.json
 appsettings.Local.json
 secrets.json
+inventory.db

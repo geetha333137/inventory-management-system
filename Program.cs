@@ -13,9 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Register notification logic
-builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
-var sqliteConnection = new SqliteConnection("Data Source=:memory:");
+var sqliteConnection = new SqliteConnection("Data Source=inventory.db");
 sqliteConnection.Open();
 
 builder.Services.AddSingleton(sqliteConnection);
@@ -92,9 +92,8 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 

@@ -1,190 +1,1234 @@
 @model InventoryManagementSystem.Models.Organisation
 
 @{
-    ViewData["Title"] = "Organisation Profile";
+    ViewData["Title"] = "Organisation";
 }
 
 <div class="organisation-page">
 
-    <!-- Page Header -->
+    <!-- ================= HEADER ================= -->
+
     <div class="organisation-header">
 
         <div>
             <div class="organisation-breadcrumb">
-                Administration / Organisation Profile
+                Administration / Organisation
             </div>
 
-            <h1>Organisation Profile</h1>
+            <h1>Organisation</h1>
 
             <p>
-                Manage your organisation information and contact details.
+                Manage your organisation profile and information.
             </p>
         </div>
 
-        <a asp-action="Edit" class="organisation-edit-btn">
-            ✏ Edit Profile
+        <a asp-action="Create"
+           class="create-button">
+
+            <span class="create-plus">+</span>
+            Create Organisation
+
         </a>
 
     </div>
 
 
-    <!-- Success Message -->
+    <!-- ================= ALERTS ================= -->
+
     @if (TempData["Success"] != null)
     {
-        <div class="organisation-alert success">
-            ✓ @TempData["Success"]
+        <div class="alert-message success">
+            <span>✓</span>
+            @TempData["Success"]
         </div>
     }
 
-    <!-- Error Message -->
     @if (TempData["Error"] != null)
     {
-        <div class="organisation-alert error">
-            ⚠ @TempData["Error"]
+        <div class="alert-message error">
+            <span>!</span>
+            @TempData["Error"]
         </div>
     }
 
 
-    <!-- Main Profile Card -->
-    <div class="organisation-profile-card">
+    <!-- ================= ORGANISATION ================= -->
 
-        <!-- Profile Top -->
-        <div class="organisation-profile-top">
+    @if (Model != null)
+    {
+        <div class="organisation-card">
 
-            <!-- Logo -->
-            <div class="organisation-logo-section">
+            <!-- ================= MAIN ROW ================= -->
 
-                @if (!string.IsNullOrEmpty(Model.LogoPath))
-                {
-                    <img src="@Model.LogoPath"
-                         alt="Organisation Logo"
-                         class="organisation-logo" />
-                }
-                else
-                {
-                    <div class="organisation-logo-placeholder">
-                        🏢
-                    </div>
-                }
+            <div class="organisation-row"
+                 onclick="toggleOrganisation(this)">
 
-            </div>
+                <!-- Expand -->
+
+                <button type="button"
+                        class="expand-button"
+                        onclick="event.stopPropagation(); toggleOrganisation(this.closest('.organisation-row'))"
+                        title="Expand">
+
+                    <span class="expand-icon">›</span>
+
+                </button>
 
 
-            <!-- Organisation Basic Information -->
-            <div class="organisation-basic-info">
+                <!-- Logo -->
 
-                <span class="organisation-label">
-                    ORGANISATION
-                </span>
+                <div class="organisation-logo">
 
-                <h2>
-                    @Model.OrganisationName
-                </h2>
-
-                <div class="organisation-code">
-                    Code: @Model.OrganisationCode
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Contact Information -->
-        <div class="organisation-section">
-
-            <div class="organisation-section-title">
-                <span class="section-icon">📞</span>
-                Contact Information
-            </div>
-
-            <div class="organisation-info-grid">
-
-                <div class="organisation-info-item">
-                    <span class="info-label">Phone Number</span>
-                    <span class="info-value">@Model.Phone</span>
-                </div>
-
-                <div class="organisation-info-item">
-                    <span class="info-label">Email</span>
-                    <span class="info-value">@Model.Email</span>
-                </div>
-
-                <div class="organisation-info-item">
-                    <span class="info-label">Website</span>
-
-                    @if (!string.IsNullOrEmpty(Model.Website))
+                    @if (!string.IsNullOrWhiteSpace(Model.LogoPath))
                     {
-                        <a href="@Model.Website"
-                           target="_blank"
-                           class="info-link">
-                            @Model.Website
-                        </a>
+                        <img src="@Model.LogoPath"
+                             alt="Organisation Logo" />
                     }
                     else
                     {
-                        <span class="info-value">Not provided</span>
+                        <span>🏢</span>
                     }
+
+                </div>
+
+
+                <!-- Name -->
+
+                <div class="organisation-info">
+
+                    <div class="organisation-name">
+                        @Model.OrganisationName
+                    </div>
+
+                    <div class="organisation-code">
+                        @Model.OrganisationCode
+                    </div>
+
+                </div>
+
+
+                <!-- Location -->
+
+                <div class="organisation-location">
+
+                    <span class="location-symbol">●</span>
+
+                    @Model.City, @Model.State
+
+                </div>
+
+
+                <!-- Actions -->
+
+                <div class="organisation-actions"
+                     onclick="event.stopPropagation();">
+
+                    <!-- Edit -->
+
+                    <a asp-action="Edit"
+                       class="action-button edit-button"
+                       title="Edit">
+
+                        <span>✎</span>
+                        Edit
+
+                    </a>
+
+
+                    <!-- Details -->
+
+                    <button type="button"
+                            class="action-button details-button"
+                            onclick="toggleOrganisation(
+                                this.closest('.organisation-card')
+                                    .querySelector('.organisation-row')
+                            )"
+                            title="Details">
+
+                        <span>⌄</span>
+                        Details
+
+                    </button>
+
+
+                    <!-- Delete -->
+
+                    <button type="button"
+                            class="action-button delete-button"
+                            onclick="openDeleteModal(@Model.Id)"
+                            title="Delete">
+
+                        <span>🗑</span>
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= DETAILS ================= -->
+
+            <div class="organisation-details">
+
+                <div class="details-container">
+
+                    <!-- Details Header -->
+
+                    <div class="details-header">
+
+                        <div>
+
+                            <span class="details-overline">
+                                ORGANISATION DETAILS
+                            </span>
+
+                            <h2>
+                                @Model.OrganisationName
+                            </h2>
+
+                        </div>
+
+                        <a asp-action="Edit"
+                           class="details-edit">
+
+                            ✎ Edit Organisation
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- Information Grid -->
+
+                    <div class="details-grid">
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Organisation Name
+                            </span>
+
+                            <strong>
+                                @Model.OrganisationName
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Organisation Code
+                            </span>
+
+                            <strong>
+                                @Model.OrganisationCode
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Phone
+                            </span>
+
+                            <strong>
+                                @Model.Phone
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Email
+                            </span>
+
+                            <strong>
+                                @Model.Email
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Website
+                            </span>
+
+                            @if (!string.IsNullOrWhiteSpace(Model.Website))
+                            {
+                                <a href="@Model.Website"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+
+                                    @Model.Website
+
+                                </a>
+                            }
+                            else
+                            {
+                                <strong>
+                                    Not provided
+                                </strong>
+                            }
+
+                        </div>
+
+
+                        <div class="detail-item detail-wide">
+
+                            <span class="detail-label">
+                                Address
+                            </span>
+
+                            <strong>
+                                @Model.Address
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                City
+                            </span>
+
+                            <strong>
+                                @Model.City
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                State
+                            </span>
+
+                            <strong>
+                                @Model.State
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Country
+                            </span>
+
+                            <strong>
+                                @Model.Country
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span class="detail-label">
+                                Postal Code
+                            </span>
+
+                            <strong>
+                                @Model.PostalCode
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Footer -->
+
+                    <div class="details-footer">
+
+                        <span>
+                            Last updated
+                        </span>
+
+                        <strong>
+                            @Model.UpdatedDate
+                                .ToLocalTime()
+                                .ToString("dd MMM yyyy, hh:mm tt")
+                        </strong>
+
+                    </div>
+
                 </div>
 
             </div>
 
         </div>
+    }
+    else
+    {
+        <!-- ================= EMPTY STATE ================= -->
 
+        <div class="empty-state">
 
-        <!-- Address Information -->
-        <div class="organisation-section">
-
-            <div class="organisation-section-title">
-                <span class="section-icon">📍</span>
-                Address Information
+            <div class="empty-icon">
+                🏢
             </div>
 
-            <div class="organisation-info-grid">
+            <h2>
+                No Organisation Found
+            </h2>
 
-                <div class="organisation-info-item full-width">
-                    <span class="info-label">Address</span>
-                    <span class="info-value">@Model.Address</span>
-                </div>
+            <p>
+                Create your organisation profile to get started.
+            </p>
 
-                <div class="organisation-info-item">
-                    <span class="info-label">City</span>
-                    <span class="info-value">@Model.City</span>
-                </div>
+            <a asp-action="Create"
+               class="create-button">
 
-                <div class="organisation-info-item">
-                    <span class="info-label">State</span>
-                    <span class="info-value">@Model.State</span>
-                </div>
+                <span class="create-plus">+</span>
+                Create Organisation
 
-                <div class="organisation-info-item">
-                    <span class="info-label">Country</span>
-                    <span class="info-value">@Model.Country</span>
-                </div>
-
-                <div class="organisation-info-item">
-                    <span class="info-label">Postal Code</span>
-                    <span class="info-value">@Model.PostalCode</span>
-                </div>
-
-            </div>
+            </a>
 
         </div>
+    }
+
+</div>
 
 
-        <!-- Last Updated -->
-        <div class="organisation-updated">
+<!-- ===================================================== -->
+<!-- DELETE MODAL -->
+<!-- ===================================================== -->
 
-            <span>
-                Last updated
-            </span>
+<div id="deleteOrganisationModal"
+     class="delete-modal">
 
-            <strong>
-                @Model.UpdatedDate.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
-            </strong>
+    <div class="delete-modal-content">
+
+        <div class="delete-modal-icon">
+            🗑
+        </div>
+
+        <h2>
+            Delete Organisation?
+        </h2>
+
+        <p>
+            Are you sure you want to delete this organisation?
+            This action cannot be undone.
+        </p>
+
+        <div class="delete-modal-actions">
+
+            <button type="button"
+                    class="cancel-button"
+                    onclick="closeDeleteModal()">
+
+                Cancel
+
+            </button>
+
+            <form id="deleteOrganisationForm"
+                  asp-action="Delete"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       id="deleteOrganisationId"
+                       name="id" />
+
+                <button type="submit"
+                        class="confirm-delete">
+
+                    Delete
+
+                </button>
+
+            </form>
 
         </div>
 
     </div>
 
 </div>
+
+
+@section Styles {
+
+<style>
+
+    /* =====================================================
+       BASE
+       ===================================================== */
+
+    .organisation-page {
+        max-width: 1380px;
+        margin: 0 auto;
+        padding: 32px;
+        color: #1e293b;
+    }
+
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
+    .organisation-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 25px;
+        margin-bottom: 28px;
+    }
+
+    .organisation-breadcrumb {
+        margin-bottom: 8px;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .organisation-header h1 {
+        margin: 0;
+        color: #172554;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+    }
+
+    .organisation-header p {
+        margin: 7px 0 0;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+
+    /* =====================================================
+       CREATE BUTTON
+       ===================================================== */
+
+    .create-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 12px 18px;
+        border: 1px solid #2563eb;
+        border-radius: 8px;
+        background: #2563eb;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .create-button:hover {
+        background: #1d4ed8;
+        border-color: #1d4ed8;
+        color: #ffffff !important;
+    }
+
+    .create-plus {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1;
+    }
+
+
+    /* =====================================================
+       ALERTS
+       ===================================================== */
+
+    .alert-message {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .alert-message.success {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+    }
+
+    .alert-message.error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+    }
+
+
+    /* =====================================================
+       ORGANISATION CARD
+       ===================================================== */
+
+    .organisation-card {
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+
+    /* =====================================================
+       MAIN ROW
+       ===================================================== */
+
+    .organisation-row {
+        display: flex;
+        align-items: center;
+        min-height: 92px;
+        gap: 18px;
+        padding: 15px 20px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .organisation-row:hover {
+        background: #f8fafc;
+    }
+
+
+    /* =====================================================
+       EXPAND
+       ===================================================== */
+
+    .expand-button {
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #e2e8f0;
+        border-radius: 7px;
+        background: #ffffff;
+        cursor: pointer;
+    }
+
+    .expand-button:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
+    .expand-icon {
+        color: #475569;
+        font-size: 28px;
+        line-height: 1;
+        transition: transform 0.2s ease;
+    }
+
+    .organisation-card.expanded .expand-icon {
+        transform: rotate(90deg);
+    }
+
+
+    /* =====================================================
+       LOGO
+       ===================================================== */
+
+    .organisation-logo {
+        width: 58px;
+        height: 58px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        border-radius: 9px;
+        background: #f8fafc;
+    }
+
+    .organisation-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .organisation-logo span {
+        font-size: 27px;
+    }
+
+
+    /* =====================================================
+       ORGANISATION INFO
+       ===================================================== */
+
+    .organisation-info {
+        min-width: 230px;
+    }
+
+    .organisation-name {
+        margin-bottom: 5px;
+        color: #172554;
+        font-size: 16px;
+        font-weight: 650;
+    }
+
+    .organisation-code {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+
+    /* =====================================================
+       LOCATION
+       ===================================================== */
+
+    .organisation-location {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .location-symbol {
+        color: #2563eb;
+        font-size: 10px;
+    }
+
+
+    /* =====================================================
+       ACTIONS
+       ===================================================== */
+
+    .organisation-actions {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .action-button {
+        min-width: 82px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 0 12px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none !important;
+        transition: all 0.2s ease;
+    }
+
+    .action-button span:first-child {
+        font-size: 17px;
+    }
+
+
+    /* Edit */
+
+    .edit-button {
+        border: 1px solid #bfdbfe;
+        background: #eff6ff;
+        color: #1d4ed8;
+    }
+
+    .edit-button:hover {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+
+    /* Details */
+
+    .details-button {
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #475569;
+    }
+
+    .details-button:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+
+
+    /* Delete */
+
+    .delete-button {
+        border: 1px solid #fecaca;
+        background: #ffffff;
+        color: #dc2626;
+    }
+
+    .delete-button:hover {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+
+    /* =====================================================
+       DETAILS
+       ===================================================== */
+
+    .organisation-details {
+        display: none;
+        border-top: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    .organisation-card.expanded .organisation-details {
+        display: block;
+    }
+
+    .details-container {
+        padding: 28px;
+    }
+
+
+    /* Details header */
+
+    .details-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .details-overline {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+    }
+
+    .details-header h2 {
+        margin: 5px 0 0;
+        color: #172554;
+        font-size: 21px;
+        font-weight: 700;
+    }
+
+    .details-edit {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 14px;
+        border: 1px solid #bfdbfe;
+        border-radius: 7px;
+        background: #ffffff;
+        color: #1d4ed8;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .details-edit:hover {
+        background: #eff6ff;
+        color: #1e40af;
+    }
+
+
+    /* =====================================================
+       DETAIL GRID
+       ===================================================== */
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #e2e8f0;
+    }
+
+    .detail-item {
+        min-height: 82px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        padding: 15px 18px;
+        background: #ffffff;
+    }
+
+    .detail-wide {
+        grid-column: span 2;
+    }
+
+    .detail-label {
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 650;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .detail-item strong {
+        color: #334155;
+        font-size: 14px;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .detail-item a {
+        color: #2563eb;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        overflow-wrap: anywhere;
+    }
+
+    .detail-item a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =====================================================
+       DETAILS FOOTER
+       ===================================================== */
+
+    .details-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 18px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    .details-footer strong {
+        color: #64748b;
+        font-weight: 600;
+    }
+
+
+    /* =====================================================
+       EMPTY STATE
+       ===================================================== */
+
+    .empty-state {
+        padding: 70px 30px;
+        text-align: center;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+    }
+
+    .empty-icon {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        font-size: 34px;
+    }
+
+    .empty-state h2 {
+        margin-bottom: 7px;
+        color: #172554;
+        font-size: 21px;
+    }
+
+    .empty-state p {
+        margin-bottom: 22px;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+
+    /* =====================================================
+       DELETE MODAL
+       ===================================================== */
+
+    .delete-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(15, 23, 42, 0.50);
+    }
+
+    .delete-modal.show {
+        display: flex;
+    }
+
+    .delete-modal-content {
+        width: 100%;
+        max-width: 420px;
+        padding: 30px;
+        border-radius: 12px;
+        background: #ffffff;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+    }
+
+    .delete-modal-icon {
+        width: 58px;
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 17px;
+        border-radius: 50%;
+        background: #fef2f2;
+        color: #dc2626;
+        font-size: 25px;
+    }
+
+    .delete-modal-content h2 {
+        margin: 0 0 9px;
+        color: #172554;
+        font-size: 20px;
+    }
+
+    .delete-modal-content p {
+        margin: 0;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .delete-modal-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .cancel-button,
+    .confirm-delete {
+        min-height: 40px;
+        padding: 0 17px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .cancel-button {
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #475569;
+    }
+
+    .cancel-button:hover {
+        background: #f8fafc;
+    }
+
+    .confirm-delete {
+        border: 1px solid #dc2626;
+        background: #dc2626;
+        color: #ffffff;
+    }
+
+    .confirm-delete:hover {
+        background: #b91c1c;
+        border-color: #b91c1c;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
+    @@media (max-width: 1050px) {
+
+        .organisation-row {
+            flex-wrap: wrap;
+        }
+
+        .organisation-location {
+            flex: 1;
+        }
+
+        .organisation-actions {
+            width: 100%;
+            justify-content: flex-end;
+            padding-left: 110px;
+        }
+
+        .details-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .detail-wide {
+            grid-column: span 2;
+        }
+    }
+
+
+    @@media (max-width: 700px) {
+
+        .organisation-page {
+            padding: 20px;
+        }
+
+        .organisation-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .create-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .organisation-row {
+            padding: 16px;
+        }
+
+        .organisation-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .organisation-location {
+            width: 100%;
+            flex: none;
+            padding-left: 54px;
+        }
+
+        .organisation-actions {
+            width: 100%;
+            padding-left: 0;
+        }
+
+        .action-button {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .details-container {
+            padding: 20px;
+        }
+
+        .details-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-wide {
+            grid-column: auto;
+        }
+
+        .details-footer {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+    }
+
+
+    @@media (max-width: 450px) {
+
+        .organisation-logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .action-button {
+            padding: 0 7px;
+            gap: 4px;
+        }
+
+        .action-button span:last-child {
+            font-size: 11px;
+        }
+
+        .delete-modal-actions {
+            flex-direction: column;
+        }
+
+        .cancel-button,
+        .confirm-delete {
+            width: 100%;
+        }
+    }
+
+</style>
+}
+
+
+@section Scripts {
+
+<script>
+
+    function toggleOrganisation(row) {
+
+        const card =
+            row.closest(".organisation-card");
+
+        if (!card) {
+            return;
+        }
+
+        card.classList.toggle("expanded");
+    }
+
+
+    function openDeleteModal(id) {
+
+        document.getElementById(
+            "deleteOrganisationId"
+        ).value = id;
+
+        document.getElementById(
+            "deleteOrganisationModal"
+        ).classList.add("show");
+    }
+
+
+    function closeDeleteModal() {
+
+        document.getElementById(
+            "deleteOrganisationModal"
+        ).classList.remove("show");
+    }
+
+
+    document
+        .getElementById("deleteOrganisationModal")
+        .addEventListener("click", function (event) {
+
+            if (event.target === this) {
+                closeDeleteModal();
+            }
+
+        });
+
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+            closeDeleteModal();
+        }
+
+    });
+
+</script>
+
+}

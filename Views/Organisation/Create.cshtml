@@ -1,35 +1,38 @@
 @model InventoryManagementSystem.Models.Organisation
 
 @{
-    ViewData["Title"] = "Create Organisation Profile";
+    ViewData["Title"] = "Create Organisation";
 }
 
-<div class="organisation-form-page">
+<div class="organisation-create-page">
 
-    <!-- Page Header -->
-    <div class="organisation-form-header">
+    <!-- ================= HEADER ================= -->
+
+    <div class="create-page-header">
 
         <div>
-            <div class="organisation-breadcrumb">
-                Administration / Organisation Profile / Create
+            <div class="create-breadcrumb">
+                Administration / Organisation / Create
             </div>
 
-            <h1>Create Organisation Profile</h1>
+            <h1>Create Organisation</h1>
 
             <p>
-                Enter your organisation details to create the profile.
+                Add your organisation details to set up your StockSphere profile.
             </p>
         </div>
 
-        <a asp-action="Index" class="organisation-back-btn">
-            ← Back to Profile
+        <a asp-action="Index"
+           class="back-button">
+            ← Back to Organisation
         </a>
 
     </div>
 
 
-    <!-- Form Card -->
-    <div class="organisation-form-card">
+    <!-- ================= FORM CARD ================= -->
+
+    <div class="create-card">
 
         <form asp-action="Create"
               method="post"
@@ -37,156 +40,70 @@
 
             @Html.AntiForgeryToken()
 
+            <!-- Validation -->
+
             <div asp-validation-summary="ModelOnly"
-                 class="text-danger mb-3">
+                 class="validation-summary">
             </div>
 
 
-            <!-- Basic Information -->
-            <div class="organisation-form-section">
+            <!-- ================= ORGANISATION INFORMATION ================= -->
 
-                <div class="organisation-form-section-title">
-                    <span class="form-section-icon">🏢</span>
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        🏢
+                    </div>
 
                     <div>
-                        <h3>Basic Information</h3>
-                        <p>Enter the basic details of your organisation.</p>
+                        <h2>Organisation Information</h2>
+                        <p>
+                            Basic information about your organisation.
+                        </p>
                     </div>
+
                 </div>
 
 
-                <div class="organisation-form-grid">
+                <div class="form-grid">
+
+                    <!-- Organisation Name -->
 
                     <div class="form-group">
+
                         <label asp-for="OrganisationName">
                             Organisation Name
+                            <span>*</span>
                         </label>
 
                         <input asp-for="OrganisationName"
-                               class="organisation-input"
+                               class="form-control"
                                placeholder="Enter organisation name" />
 
                         <span asp-validation-for="OrganisationName"
-                              class="text-danger">
+                              class="field-validation">
                         </span>
+
                     </div>
 
 
+                    <!-- Organisation Code -->
+
                     <div class="form-group">
+
                         <label asp-for="OrganisationCode">
                             Organisation Code
+                            <span>*</span>
                         </label>
 
                         <input asp-for="OrganisationCode"
-                               class="organisation-input"
-                               placeholder="Example: ORG001" />
+                               class="form-control"
+                               placeholder="Example: STKSPH" />
 
                         <span asp-validation-for="OrganisationCode"
-                              class="text-danger">
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- Address Information -->
-            <div class="organisation-form-section">
-
-                <div class="organisation-form-section-title">
-                    <span class="form-section-icon">📍</span>
-
-                    <div>
-                        <h3>Address Information</h3>
-                        <p>Enter the registered address of the organisation.</p>
-                    </div>
-                </div>
-
-
-                <div class="form-group full-width">
-
-                    <label asp-for="Address">
-                        Address
-                    </label>
-
-                    <textarea asp-for="Address"
-                              class="organisation-input organisation-textarea"
-                              placeholder="Enter complete address">
-                    </textarea>
-
-                    <span asp-validation-for="Address"
-                          class="text-danger">
-                    </span>
-
-                </div>
-
-
-                <div class="organisation-form-grid">
-
-                    <div class="form-group">
-
-                        <label asp-for="City">
-                            City
-                        </label>
-
-                        <input asp-for="City"
-                               class="organisation-input"
-                               placeholder="Enter city" />
-
-                        <span asp-validation-for="City"
-                              class="text-danger">
-                        </span>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label asp-for="State">
-                            State
-                        </label>
-
-                        <input asp-for="State"
-                               class="organisation-input"
-                               placeholder="Enter state" />
-
-                        <span asp-validation-for="State"
-                              class="text-danger">
-                        </span>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label asp-for="Country">
-                            Country
-                        </label>
-
-                        <input asp-for="Country"
-                               class="organisation-input"
-                               placeholder="Enter country" />
-
-                        <span asp-validation-for="Country"
-                              class="text-danger">
-                        </span>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label asp-for="PostalCode">
-                            Postal Code
-                        </label>
-
-                        <input asp-for="PostalCode"
-                               class="organisation-input"
-                               placeholder="Enter postal code" />
-
-                        <span asp-validation-for="PostalCode"
-                              class="text-danger">
+                              class="field-validation">
                         </span>
 
                     </div>
@@ -196,54 +113,69 @@
             </div>
 
 
-            <!-- Contact Information -->
-            <div class="organisation-form-section">
+            <!-- ================= CONTACT INFORMATION ================= -->
 
-                <div class="organisation-form-section-title">
-                    <span class="form-section-icon">📞</span>
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        ☎
+                    </div>
 
                     <div>
-                        <h3>Contact Information</h3>
-                        <p>Provide the organisation's contact details.</p>
+                        <h2>Contact Information</h2>
+                        <p>
+                            Contact details used for organisation communication.
+                        </p>
                     </div>
+
                 </div>
 
 
-                <div class="organisation-form-grid">
+                <div class="form-grid">
+
+                    <!-- Phone -->
 
                     <div class="form-group">
 
                         <label asp-for="Phone">
                             Phone Number
+                            <span>*</span>
                         </label>
 
                         <input asp-for="Phone"
-                               class="organisation-input"
-                               placeholder="Enter phone number" />
+                               class="form-control"
+                               placeholder="+91 40 4000 0000" />
 
                         <span asp-validation-for="Phone"
-                              class="text-danger">
+                              class="field-validation">
                         </span>
 
                     </div>
 
+
+                    <!-- Email -->
 
                     <div class="form-group">
 
                         <label asp-for="Email">
                             Email
+                            <span>*</span>
                         </label>
 
                         <input asp-for="Email"
-                               class="organisation-input"
-                               placeholder="Enter email address" />
+                               class="form-control"
+                               placeholder="organisation@example.com" />
 
                         <span asp-validation-for="Email"
-                              class="text-danger">
+                              class="field-validation">
                         </span>
 
                     </div>
 
+
+                    <!-- Website -->
 
                     <div class="form-group full-width">
 
@@ -252,11 +184,11 @@
                         </label>
 
                         <input asp-for="Website"
-                               class="organisation-input"
-                               placeholder="https://example.com" />
+                               class="form-control"
+                               placeholder="https://www.example.com" />
 
                         <span asp-validation-for="Website"
-                              class="text-danger">
+                              class="field-validation">
                         </span>
 
                     </div>
@@ -266,64 +198,213 @@
             </div>
 
 
-            <!-- Logo -->
-            <div class="organisation-form-section">
+            <!-- ================= ADDRESS ================= -->
 
-                <div class="organisation-form-section-title">
-                    <span class="form-section-icon">🖼️</span>
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        ⌖
+                    </div>
 
                     <div>
-                        <h3>Organisation Logo</h3>
-                        <p>Upload a logo for your organisation.</p>
+                        <h2>Address</h2>
+                        <p>
+                            Enter the registered or primary organisation address.
+                        </p>
                     </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <!-- Address -->
+
+                    <div class="form-group full-width">
+
+                        <label asp-for="Address">
+                            Address
+                            <span>*</span>
+                        </label>
+
+                        <textarea asp-for="Address"
+                                  class="form-control textarea"
+                                  rows="3"
+                                  placeholder="Enter complete address">
+                        </textarea>
+
+                        <span asp-validation-for="Address"
+                              class="field-validation">
+                        </span>
+
+                    </div>
+
+
+                    <!-- City -->
+
+                    <div class="form-group">
+
+                        <label asp-for="City">
+                            City
+                            <span>*</span>
+                        </label>
+
+                        <input asp-for="City"
+                               class="form-control"
+                               placeholder="Enter city" />
+
+                        <span asp-validation-for="City"
+                              class="field-validation">
+                        </span>
+
+                    </div>
+
+
+                    <!-- State -->
+
+                    <div class="form-group">
+
+                        <label asp-for="State">
+                            State
+                            <span>*</span>
+                        </label>
+
+                        <input asp-for="State"
+                               class="form-control"
+                               placeholder="Enter state" />
+
+                        <span asp-validation-for="State"
+                              class="field-validation">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Country -->
+
+                    <div class="form-group">
+
+                        <label asp-for="Country">
+                            Country
+                            <span>*</span>
+                        </label>
+
+                        <input asp-for="Country"
+                               class="form-control"
+                               placeholder="Enter country" />
+
+                        <span asp-validation-for="Country"
+                              class="field-validation">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Postal Code -->
+
+                    <div class="form-group">
+
+                        <label asp-for="PostalCode">
+                            Postal Code
+                            <span>*</span>
+                        </label>
+
+                        <input asp-for="PostalCode"
+                               class="form-control"
+                               placeholder="Enter postal code" />
+
+                        <span asp-validation-for="PostalCode"
+                              class="field-validation">
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= LOGO ================= -->
+
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        ◈
+                    </div>
+
+                    <div>
+                        <h2>Organisation Logo</h2>
+                        <p>
+                            Upload a logo to represent your organisation.
+                        </p>
+                    </div>
+
                 </div>
 
 
                 <div class="logo-upload-area">
 
-                    <div class="logo-upload-icon">
-                        🖼️
+                    <div class="logo-preview"
+                         id="logoPreview">
+
+                        <span>🏢</span>
+
                     </div>
+
 
                     <div class="logo-upload-content">
 
                         <label for="logoFile"
-                               class="logo-upload-label">
+                               class="upload-button">
+
                             Choose Logo
+
                         </label>
 
                         <input type="file"
                                id="logoFile"
                                name="logoFile"
                                accept=".jpg,.jpeg,.png,.webp"
-                               class="logo-file-input" />
+                               hidden />
 
                         <p>
-                            JPG, JPEG, PNG or WEBP · Maximum 2 MB
+                            JPG, JPEG, PNG or WEBP
+                            <br />
+                            Maximum size: 2 MB
                         </p>
+
+                        <span id="selectedFile"
+                              class="selected-file">
+                        </span>
 
                     </div>
 
                 </div>
 
-                <span asp-validation-for="LogoPath"
-                      class="text-danger">
-                </span>
-
             </div>
 
 
-            <!-- Buttons -->
-            <div class="organisation-form-actions">
+            <!-- ================= FORM ACTIONS ================= -->
+
+            <div class="form-actions">
 
                 <a asp-action="Index"
-                   class="organisation-cancel-btn">
+                   class="cancel-button">
+
                     Cancel
+
                 </a>
 
                 <button type="submit"
-                        class="organisation-save-btn">
-                    ✓ Create Profile
+                        class="save-button">
+
+                    <span>✓</span>
+                    Create Organisation
+
                 </button>
 
             </div>
@@ -335,10 +416,493 @@
 </div>
 
 
-@section Scripts {
+@section Styles {
 
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<style>
+
+    /* =====================================================
+       PAGE
+       ===================================================== */
+
+    .organisation-create-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px;
+        color: #1e293b;
     }
 
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
+    .create-page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 25px;
+        margin-bottom: 28px;
+    }
+
+    .create-breadcrumb {
+        margin-bottom: 8px;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .create-page-header h1 {
+        margin: 0;
+        color: #172554;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+    }
+
+    .create-page-header p {
+        margin: 7px 0 0;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+
+    /* =====================================================
+       BACK BUTTON
+       ===================================================== */
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 15px;
+        border: 1px solid #cbd5e1;
+        border-radius: 7px;
+        background: #ffffff;
+        color: #475569;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+
+    .back-button:hover {
+        background: #f8fafc;
+        color: #1e293b;
+        border-color: #94a3b8;
+    }
+
+
+    /* =====================================================
+       MAIN CARD
+       ===================================================== */
+
+    .create-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+
+    /* =====================================================
+       FORM SECTION
+       ===================================================== */
+
+    .form-section {
+        padding: 28px 30px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .form-section:last-of-type {
+        border-bottom: none;
+    }
+
+
+    /* =====================================================
+       SECTION HEADING
+       ===================================================== */
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 23px;
+    }
+
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #dbeafe;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 18px;
+    }
+
+    .section-heading h2 {
+        margin: 0 0 3px;
+        color: #172554;
+        font-size: 17px;
+        font-weight: 650;
+    }
+
+    .section-heading p {
+        margin: 0;
+        color: #64748b;
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+       FORM GRID
+       ===================================================== */
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px 22px;
+    }
+
+    .full-width {
+        grid-column: span 2;
+    }
+
+
+    /* =====================================================
+       FORM GROUP
+       ===================================================== */
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        margin-bottom: 7px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .form-group label span {
+        color: #dc2626;
+        margin-left: 2px;
+    }
+
+
+    /* =====================================================
+       INPUTS
+       ===================================================== */
+
+    .form-control {
+        width: 100%;
+        min-height: 43px;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 7px;
+        outline: none;
+        background: #ffffff;
+        color: #1e293b;
+        font-family: inherit;
+        font-size: 13px;
+        transition: border-color 0.2s ease,
+                    box-shadow 0.2s ease;
+    }
+
+    .form-control::placeholder {
+        color: #94a3b8;
+    }
+
+    .form-control:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 90px;
+    }
+
+
+    /* =====================================================
+       VALIDATION
+       ===================================================== */
+
+    .field-validation {
+        margin-top: 5px;
+        color: #dc2626;
+        font-size: 12px;
+    }
+
+    .validation-summary {
+        margin: 22px 30px 0;
+        padding: 12px 15px;
+        border: 1px solid #fecaca;
+        border-radius: 7px;
+        background: #fef2f2;
+        color: #991b1b;
+        font-size: 13px;
+    }
+
+    .validation-summary:empty {
+        display: none;
+    }
+
+
+    /* =====================================================
+       LOGO UPLOAD
+       ===================================================== */
+
+    .logo-upload-area {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        border: 1px dashed #cbd5e1;
+        border-radius: 8px;
+        background: #f8fafc;
+    }
+
+    .logo-preview {
+        width: 76px;
+        height: 76px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border: 1px solid #dbe3ec;
+        border-radius: 10px;
+        background: #ffffff;
+    }
+
+    .logo-preview span {
+        font-size: 32px;
+    }
+
+    .logo-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .logo-upload-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .upload-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        padding: 0 15px;
+        border: 1px solid #2563eb;
+        border-radius: 7px;
+        background: #2563eb;
+        color: #ffffff !important;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .upload-button:hover {
+        background: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+
+    .logo-upload-content p {
+        margin: 8px 0 0;
+        color: #94a3b8;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .selected-file {
+        margin-top: 6px;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+
+    /* =====================================================
+       FORM ACTIONS
+       ===================================================== */
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 20px 30px;
+        border-top: 1px solid #e2e8f0;
+        background: #f8fafc;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .cancel-button,
+    .save-button {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 0 18px;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .cancel-button {
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #475569;
+    }
+
+    .cancel-button:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+
+    .save-button {
+        border: 1px solid #2563eb;
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+    .save-button:hover {
+        background: #1d4ed8;
+        border-color: #1d4ed8;
+    }
+
+    .save-button span {
+        font-size: 15px;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
+    @@media (max-width: 700px) {
+
+        .organisation-create-page {
+            padding: 20px;
+        }
+
+        .create-page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .back-button {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .form-section {
+            padding: 22px 20px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .full-width {
+            grid-column: auto;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+            padding: 18px 20px;
+        }
+
+        .cancel-button,
+        .save-button {
+            width: 100%;
+        }
+
+        .logo-upload-area {
+            align-items: flex-start;
+        }
+    }
+
+
+    @@media (max-width: 450px) {
+
+        .logo-upload-area {
+            flex-direction: column;
+        }
+
+        .create-page-header h1 {
+            font-size: 25px;
+        }
+    }
+
+</style>
+}
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        // ============================================
+        // LOGO PREVIEW
+        // ============================================
+
+        const logoInput =
+            document.getElementById("logoFile");
+
+        const logoPreview =
+            document.getElementById("logoPreview");
+
+        const selectedFile =
+            document.getElementById("selectedFile");
+
+
+        logoInput.addEventListener("change", function () {
+
+            const file = this.files[0];
+
+            if (!file) {
+                selectedFile.textContent = "";
+                return;
+            }
+
+            selectedFile.textContent =
+                file.name;
+
+
+            // Preview image
+
+            if (file.type.startsWith("image/")) {
+
+                const reader =
+                    new FileReader();
+
+                reader.onload = function (event) {
+
+                    logoPreview.innerHTML =
+                        `<img src="${event.target.result}"
+                              alt="Logo Preview" />`;
+
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+        });
+
+    </script>
 }

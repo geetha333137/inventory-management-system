@@ -67,6 +67,48 @@ public sealed class SmtpEmailService : IEmailService
             recipientEmail);
     }
 
+    public async Task SendNotificationAsync(
+        string recipientEmail,
+        string recipientName,
+        string notificationTitle,
+        string notificationMessage,
+        CancellationToken cancellationToken = default)
+    {
+        ValidateConfiguration();
+
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(_options.FromName, _options.FromEmail));
+        message.To.Add(new MailboxAddress(recipientName, recipientEmail));
+        message.Subject = $"StockSphere notification: {notificationTitle}";
+
+        var safeName = System.Net.WebUtility.HtmlEncode(recipientName);
+        var safeTitle = System.Net.WebUtility.HtmlEncode(notificationTitle);
+        var safeMessage = System.Net.WebUtility.HtmlEncode(notificationMessage);
+
+        message.Body = new BodyBuilder
+        {
+            TextBody = $"Hello {recipientName},\n\n{notificationTitle}\n{notificationMessage}",
+            HtmlBody = $"<p>Hello {safeName},</p><h2>{safeTitle}</h2><p>{safeMessage}</p>"
+        }.ToMessageBody();
+
+        using var smtpClient = new SmtpClient();
+        await smtpClient.ConnectAsync(
+            _options.Host,
+            _options.Port,
+            _options.SecureSocketOptions,
+            cancellationToken);
+        await smtpClient.AuthenticateAsync(
+            _options.UserName,
+            _options.Password,
+            cancellationToken);
+        await smtpClient.SendAsync(message, cancellationToken);
+        await smtpClient.DisconnectAsync(true, cancellationToken);
+
+        _logger.LogInformation(
+            "Notification email sent to {RecipientEmail}.",
+            recipientEmail);
+    }
+
     private void ValidateConfiguration()
     {
         if (string.IsNullOrWhiteSpace(_options.Host) ||

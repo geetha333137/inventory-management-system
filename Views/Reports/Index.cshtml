@@ -1,0 +1,95 @@
+@model InventoryManagementSystem.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+    <div>
+        <p class="dashboard-eyebrow">StockSphere reporting</p>
+        <h2 class="fw-bold mb-1">Inventory Reports</h2>
+        <p class="text-muted mb-0">A clear snapshot of assets, stock and operational status.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="ExportExcel" class="btn btn-primary">
+            <i class="bi bi-file-earmark-spreadsheet"></i> Download Excel
+        </a>
+        <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-primary">Back to Dashboard</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card teal">
+            <div class="kpi-label">Total Assets</div>
+            <div class="kpi-value">@Model.TotalAssets</div>
+            <small class="text-muted">Registered assets</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card blue">
+            <div class="kpi-label">Inventory Items</div>
+            <div class="kpi-value">@Model.TotalInventoryItems</div>
+            <small class="text-muted">Tracked stock records</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card green">
+            <div class="kpi-label">Active Assets</div>
+            <div class="kpi-value">@Model.ActiveAssets</div>
+            <small class="text-muted">Available, assigned or in repair</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card amber">
+            <div class="kpi-label">Categories</div>
+            <div class="kpi-value">@Model.CategoryCount</div>
+            <small class="text-muted">Active classifications</small>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="dashboard-panel h-100">
+            <div class="dashboard-panel-header">
+                <div>
+                    <p class="dashboard-eyebrow">Asset health</p>
+                    <h5>Status breakdown</h5>
+                </div>
+            </div>
+
+            @foreach (var status in Model.AssetsByStatus)
+            {
+                <div class="progress-row">
+                    <div class="progress-meta">
+                        <span>@status.Label</span>
+                        <strong>@status.Value</strong>
+                    </div>
+                    <div class="progress-track">
+                        <span style="width: @(Model.TotalAssets > 0 ? status.Value / (double)Model.TotalAssets * 100 : 0)%"></span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="dashboard-panel h-100">
+            <div class="dashboard-panel-header">
+                <div>
+                    <p class="dashboard-eyebrow">Distribution</p>
+                    <h5>Assets by category</h5>
+                </div>
+            </div>
+
+            @foreach (var category in Model.AssetsByCategory)
+            {
+                <div class="d-flex justify-content-between border-bottom py-2">
+                    <span>@category.Label</span>
+                    <strong>@category.Value</strong>
+                </div>
+            }
+        </div>
+    </div>
+</div>

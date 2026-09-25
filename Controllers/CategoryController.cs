@@ -1,12 +1,12 @@
 using InventoryManagementSystem.Data;
+using InventoryManagementSystem.Authorization;
 using InventoryManagementSystem.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementSystem.Controllers
 {
-    [Authorize(Roles = "Asset Manager")]
+    [PermissionAuthorize("VIEW_CATEGORY")]
     public class CategoryController : Controller
     {
         private readonly AppDbContext _context;

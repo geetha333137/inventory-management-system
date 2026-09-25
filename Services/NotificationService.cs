@@ -1,4 +1,6 @@
 using System.Text.Json;
+using InventoryManagementSystem.Services;
+using Microsoft.Extensions.Options;
 using NotificationButtonOnly_MVC.Models;
 
 namespace NotificationButtonOnly_MVC.Services;
@@ -10,6 +12,9 @@ public class NotificationService : INotificationService
 {
     private readonly string _filePath;
     private readonly SemaphoreSlim _lock = new(1, 1);
+    private readonly IEmailService _emailService;
+    private readonly SmtpOptions _smtpOptions;
+    private readonly ILogger<NotificationService> _logger;
 
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -19,11 +24,19 @@ public class NotificationService : INotificationService
 
     private long _nextId = 1;
 
-    public NotificationService(IWebHostEnvironment environment)
+    public NotificationService(
+        IWebHostEnvironment environment,
+        IEmailService emailService,
+        IOptions<SmtpOptions> smtpOptions,
+        ILogger<NotificationService> logger)
     {
         _filePath = Path.Combine(
             environment.ContentRootPath,
             "notifications.json");
+
+        _emailService = emailService;
+        _smtpOptions = smtpOptions.Value;
+        _logger = logger;
 
         if (!File.Exists(_filePath))
             File.WriteAllText(_filePath, "[]");
@@ -105,6 +118,8 @@ public class NotificationService : INotificationService
             list.Insert(0, notification);
 
             await WriteAsync(list);
+
+            await SendEmailAsync(notification);
 
             return notification;
         }
@@ -238,5 +253,29 @@ public class NotificationService : INotificationService
         await File.WriteAllTextAsync(
             _filePath,
             json);
+    }
+
+    private async Task SendEmailAsync(Notification notification)
+    {
+        if (string.IsNullOrWhiteSpace(_smtpOptions.DefaultRecipientEmail))
+        {
+            return;
+        }
+
+        try
+        {
+            await _emailService.SendNotificationAsync(
+                _smtpOptions.DefaultRecipientEmail,
+                "StockSphere user",
+                notification.Title,
+                notification.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Unable to send notification email to {RecipientEmail}.",
+                _smtpOptions.DefaultRecipientEmail);
+        }
     }
 }

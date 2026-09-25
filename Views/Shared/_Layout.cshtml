@@ -18,8 +18,8 @@
     <link rel="stylesheet"
           href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-        <link rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
     <link rel="stylesheet"
           href="~/css/site.css"
@@ -28,6 +28,10 @@
     <link rel="stylesheet"
           href="~/css/notification.css"
           asp-append-version="true" />
+
+    @* Allows individual views to add their own CSS *@
+    @await RenderSectionAsync("Styles", required: false)
+
 </head>
 
 <body>
@@ -35,79 +39,183 @@
     @if (User.Identity?.IsAuthenticated == true)
     {
         <div class="authenticated-shell">
+
             <aside class="app-sidebar" id="appSidebar">
-                <a class="sidebar-brand" asp-controller="Dashboard" asp-action="Index">
+
+                <a class="sidebar-brand"
+                   asp-controller="Dashboard"
+                   asp-action="Index">
+
                     <span class="sidebar-brand-mark">IM</span>
+
                     <span>
-                        <strong>Inventory</strong>
-                        <small>Management System</small>
+                        <strong>StockSphere</strong>
+                        <small>Inventory Management</small>
                     </span>
+
                 </a>
 
-                <nav class="sidebar-navigation" aria-label="Application navigation">
-                    <span class="sidebar-section-label">Workspace</span>
-                    <a asp-controller="Dashboard" asp-action="Index">
+                <nav class="sidebar-navigation"
+                     aria-label="Application navigation">
+
+                    <span class="sidebar-section-label">
+                        Workspace
+                    </span>
+
+                    <a asp-controller="Dashboard"
+                       asp-action="Index">
+
                         <span class="sidebar-icon">&#9632;</span>
                         Dashboard
+
                     </a>
-                    <a asp-controller="Inventory" asp-action="Index">
+
+                    <a asp-controller="Inventory"
+                       asp-action="Index">
+
                         <span class="sidebar-icon">&#9633;</span>
                         Inventory
+
                     </a>
-                    <a asp-controller="Asset" asp-action="Index">
+
+                    <a asp-controller="Asset"
+                       asp-action="Index">
+
                         <span class="sidebar-icon">&#9645;</span>
                         Assets
+
                     </a>
-                    <a asp-controller="Category" asp-action="Index">
+
+                    <a asp-controller="Category"
+                       asp-action="Index">
+
                         <span class="sidebar-icon">&#9776;</span>
                         Categories
+
                     </a>
+
+                    <a asp-controller="Reports"
+                       asp-action="Index">
+
+                        <span class="sidebar-icon">&#9636;</span>
+                        Reports
+
+                    </a>
+
 
                     @if (User.IsInRole("Asset Manager"))
                     {
-                        <span class="sidebar-section-label">Administration</span>
-                        <a asp-controller="Users" asp-action="Index">
+                        <span class="sidebar-section-label">
+                            Administration
+                        </span>
+
+                        <a asp-controller="Users"
+                           asp-action="Index">
+
                             <span class="sidebar-icon">&#9673;</span>
                             Users
+
                         </a>
-                        <a asp-controller="Organisation" asp-action="Index">
+
+                        <a asp-controller="Organisation"
+                           asp-action="Index">
+
                             <span class="sidebar-icon">&#9638;</span>
                             Organisation
+
                         </a>
                     }
+
                 </nav>
 
+
                 <div class="sidebar-account">
+
                     <div class="sidebar-user">
-                        <span class="sidebar-avatar">@User.Identity?.Name?.Substring(0, 1).ToUpperInvariant()</span>
-                        <span>
-                            <strong>@User.Identity?.Name</strong>
-                            <small>@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</small>
+
+                        <span class="sidebar-avatar">
+                            @User.Identity?.Name?
+                                .Substring(0, 1)
+                                .ToUpperInvariant()
                         </span>
+
+                        <span>
+                            <strong>
+                                @User.Identity?.Name
+                            </strong>
+
+                            <small>
+                                @User.FindFirst(
+                                    System.Security.Claims.ClaimTypes.Role
+                                )?.Value
+                            </small>
+                        </span>
+
                     </div>
-                    <form asp-controller="Account" asp-action="Logout" method="post">
+
+
+                    <form asp-controller="Account"
+                          asp-action="Logout"
+                          method="post">
+
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="sidebar-logout">Log out</button>
+
+                        <button type="submit"
+                                class="sidebar-logout">
+
+                            Log out
+
+                        </button>
+
                     </form>
+
                 </div>
+
             </aside>
 
+
             <div class="app-main">
+
                 <header class="app-topbar">
-                    <button class="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-controls="appSidebar" aria-expanded="false">
+
+                    <button class="sidebar-toggle"
+                            type="button"
+                            onclick="toggleSidebar()"
+                            aria-controls="appSidebar"
+                            aria-expanded="false">
+
                         &#9776;
+
                     </button>
+
+
                     <div>
-                        <p class="app-breadcrumb">Inventory workspace</p>
-                        <h1>@ViewData["Title"]</h1>
+
+                        <p class="app-breadcrumb">
+                            Inventory workspace
+                        </p>
+
+                        <h1>
+                            @ViewData["Title"]
+                        </h1>
+
                     </div>
+
+
                     <partial name="_NotificationBell" />
+
                 </header>
 
-                <main role="main" class="app-content">
+
+                <main role="main"
+                      class="app-content">
+
                     @RenderBody()
+
                 </main>
+
             </div>
+
         </div>
     }
     else
@@ -116,110 +224,131 @@
 
         <header>
 
-        <nav class="main-navbar">
+            <nav class="main-navbar">
 
-            <div class="navbar-container">
+                <div class="navbar-container">
 
-                <!-- LOGO / PROJECT NAME -->
+                    <!-- LOGO / PROJECT NAME -->
 
-                <a class="brand-logo"
-                   asp-controller="Home"
-                   asp-action="Index">
+                    <a class="brand-logo"
+                       asp-controller="Home"
+                       asp-action="Index">
 
-                    <div class="brand-icon">
-                        📋
-                    </div>
+                        <div class="brand-icon">
+                            📋
+                        </div>
 
-                    <div class="brand-text">
-                        <span>Inventory</span>
-                        <span>Management System</span>
-                    </div>
+                        <div class="brand-text">
 
-                </a>
+                            <span>
+                                StockSphere
+                            </span>
 
+                            <span>
+                                Inventory Management
+                            </span>
 
-                <!-- MOBILE MENU BUTTON -->
+                        </div>
 
-                <button class="mobile-menu-button"
-                        type="button"
-                        onclick="toggleMenu()">
-
-                    ☰
-
-                </button>
-
-
-                <!-- NAVIGATION -->
-
-                <div class="main-navigation" id="mainNavigation">
-
-                    <a href="/#features">
-                        Features
                     </a>
 
-                    <a href="/#resources">
-                        Resources
-                    </a>
 
-                    <a href="/#about">
-                        About Us
-                    </a>
+                    <!-- MOBILE MENU BUTTON -->
 
-                    <span class="search-icon">
-                        🔍
-                    </span>
+                    <button class="mobile-menu-button"
+                            type="button"
+                            onclick="toggleMenu()">
+
+                        ☰
+
+                    </button>
 
 
-                    <!-- LOGIN / LOGOUT -->
+                    <!-- NAVIGATION -->
 
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <form asp-controller="Account"
-                              asp-action="Logout"
-                              method="post"
-                              style="display:inline;">
+                    <div class="main-navigation"
+                         id="mainNavigation">
 
-                            @Html.AntiForgeryToken()
+                        <a href="/#features">
+                            Features
+                        </a>
 
-                            <button type="submit"
-                                    class="navbar-login">
+                        <a href="/#resources">
+                            Resources
+                        </a>
+
+                        <a href="/#about">
+                            About Us
+                        </a>
+
+                        <span class="search-icon">
+                            🔍
+                        </span>
+
+
+                        <!-- LOGIN / LOGOUT -->
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <form asp-controller="Account"
+                                  asp-action="Logout"
+                                  method="post"
+                                  style="display:inline;">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit"
+                                        class="navbar-login">
+
+                                    <span>👤</span>
+                                    Logout
+
+                                </button>
+
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="navbar-login"
+                               asp-controller="Account"
+                               asp-action="Login">
 
                                 <span>👤</span>
-                                Logout
+                                Login
 
-                            </button>
+                            </a>
+                        }
 
-                        </form>
-                    }
-                    else
-                    {
-                        <a class="navbar-login"
-                           asp-controller="Account"
-                           asp-action="Login">
+                    </div>
 
-                            <span>👤</span>
-                            Login
+                </div>
 
-                        </a>
-                    }
+            </nav>
 
+        </header>
+
+
+        <main role="main">
+
+            @RenderBody()
+
+        </main>
+
+
+        <footer class="main-footer">
+
+            <div class="footer-container">
+
+                <div>
+                    © 2026 Inventory Management System
+                </div>
+
+                <div>
+                    Manage your inventory efficiently and securely.
                 </div>
 
             </div>
 
-        </nav>
-
-        </header>
-
-        <main role="main">
-            @RenderBody()
-        </main>
-
-        <footer class="main-footer">
-            <div class="footer-container">
-                <div>© 2026 Inventory Management System</div>
-                <div>Manage your inventory efficiently and securely.</div>
-            </div>
         </footer>
     }
 
@@ -233,30 +362,58 @@
     <script src="~/js/site.js"
             asp-append-version="true"></script>
 
+
     <script>
+
         window.notificationConfig = {
+
             urls: {
+
                 getAll: '@Url.Action("GetAll", "Notifications")',
+
                 create: '@Url.Action("Create", "Notifications")',
-                markAsRead: '@Url.Action("MarkAsRead", "Notifications")',
-                markAllAsRead: '@Url.Action("MarkAllAsRead", "Notifications")',
-                delete: '@Url.Action("Delete", "Notifications")',
-                clearAll: '@Url.Action("ClearAll", "Notifications")'
+
+                markAsRead:
+                    '@Url.Action("MarkAsRead", "Notifications")',
+
+                markAllAsRead:
+                    '@Url.Action("MarkAllAsRead", "Notifications")',
+
+                delete:
+                    '@Url.Action("Delete", "Notifications")',
+
+                clearAll:
+                    '@Url.Action("ClearAll", "Notifications")'
+
             },
+
             emailJs: {
-                publicKey: '@Configuration["EmailJS:PublicKey"]',
-                serviceId: '@Configuration["EmailJS:ServiceId"]',
-                templateId: '@Configuration["EmailJS:TemplateId"]',
-                defaultRecipientEmail: '@Configuration["EmailJS:DefaultRecipientEmail"]'
+
+                publicKey:
+                    '@Configuration["EmailJS:PublicKey"]',
+
+                serviceId:
+                    '@Configuration["EmailJS:ServiceId"]',
+
+                templateId:
+                    '@Configuration["EmailJS:TemplateId"]',
+
+                defaultRecipientEmail:
+                    '@Configuration["EmailJS:DefaultRecipientEmail"]'
+
             }
+
         };
+
     </script>
+
 
     <script src="~/js/emailjs.js"
             asp-append-version="true"></script>
 
     <script src="~/js/notifications.js"
             asp-append-version="true"></script>
+
 
     <script>
 
@@ -265,20 +422,37 @@
             const menu =
                 document.getElementById("mainNavigation");
 
-            menu.classList.toggle("show");
+            if (menu) {
+                menu.classList.toggle("show");
+            }
 
         }
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById("appSidebar");
-            const button = document.querySelector(".sidebar-toggle");
-            if (!sidebar || !button) return;
 
-            const isOpen = sidebar.classList.toggle("is-open");
-            button.setAttribute("aria-expanded", isOpen.toString());
+        function toggleSidebar() {
+
+            const sidebar =
+                document.getElementById("appSidebar");
+
+            const button =
+                document.querySelector(".sidebar-toggle");
+
+            if (!sidebar || !button) {
+                return;
+            }
+
+            const isOpen =
+                sidebar.classList.toggle("is-open");
+
+            button.setAttribute(
+                "aria-expanded",
+                isOpen.toString()
+            );
+
         }
 
     </script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 

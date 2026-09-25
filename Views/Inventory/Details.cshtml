@@ -1,0 +1,53 @@
+@model InventoryManagementSystem.Models.InventoryItem
+
+@{
+    ViewData["Title"] = "Inventory Item Details";
+}
+
+<div class="content-card">
+    <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <p class="eyebrow">StockSphere inventory</p>
+            <h1>@Model.Name</h1>
+            <p class="helper-text mb-0">Complete information for this inventory item.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+        </div>
+    </div>
+
+    <div class="detail-list">
+        <div class="detail-item">
+            <span class="detail-label">Item name</span>
+            <strong>@Model.Name</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Category</span>
+            <strong>@Model.Category</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Quantity</span>
+            <strong>@Model.Quantity</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Unit price</span>
+            <strong>@Model.Price.ToString("C")</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Stock status</span>
+            @if (Model.IsLowStock)
+            {
+                <strong class="text-warning">Low stock</strong>
+            }
+            else
+            {
+                <strong class="text-success">Healthy</strong>
+            }
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Last updated</span>
+            <strong>@Model.UpdatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</strong>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,8 @@
 @model DashboardViewModel
-@using System.Text.Json
 
 @{
-    var chartOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    var maxCategoryCount = Model.AssetsByCategory.Any() ? Model.AssetsByCategory.Max(x => x.Value) : 0;
+    var maxStatusCount = Model.AssetsByStatus.Any() ? Model.AssetsByStatus.Max(x => x.Value) : 0;
 }
 
 <div class="row g-3 mb-4">
@@ -15,15 +15,18 @@
             <small class="text-muted">Registered inventory items</small>
         </div>
     </div>
-    <div class="col-6 col-xl-3">
-        <div class="kpi-card blue">
-            <a class="dashboard-kpi-link" asp-controller="Users" asp-action="Index">
-                <div class="kpi-label">Total Users</div>
-                <div class="kpi-value">@Model.TotalUsers</div>
-            </a>
-            <small class="text-muted">People with system access</small>
+    @if (User.IsInRole("Asset Manager"))
+    {
+        <div class="col-6 col-xl-3">
+            <div class="kpi-card blue">
+                <a class="dashboard-kpi-link" asp-controller="Users" asp-action="Index">
+                    <div class="kpi-label">Total Users</div>
+                    <div class="kpi-value">@Model.TotalUsers</div>
+                </a>
+                <small class="text-muted">People with system access</small>
+            </div>
         </div>
-    </div>
+    }
     <div class="col-6 col-xl-3">
         <div class="kpi-card amber">
             <a class="dashboard-kpi-link" asp-controller="Inventory" asp-action="Index">
@@ -35,78 +38,213 @@
     </div>
     <div class="col-6 col-xl-3">
         <div class="kpi-card green">
-            <div class="kpi-label">Available</div>
-            <div class="kpi-value">@Model.AvailableAssets</div>
+            <a class="dashboard-kpi-link" asp-controller="Asset" asp-action="Index" asp-route-status="Available">
+                <div class="kpi-label">Available</div>
+                <div class="kpi-value">@Model.AvailableAssets</div>
+            </a>
             <small class="text-muted">Ready for assignment</small>
         </div>
     </div>
     <div class="col-6 col-xl-3">
         <div class="kpi-card blue">
-            <div class="kpi-label">Assigned</div>
-            <div class="kpi-value">@Model.AssignedAssets</div>
+            <a class="dashboard-kpi-link" asp-controller="Asset" asp-action="Index" asp-route-status="Assigned">
+                <div class="kpi-label">Assigned</div>
+                <div class="kpi-value">@Model.AssignedAssets</div>
+            </a>
             <small class="text-muted">Currently in use</small>
         </div>
     </div>
     <div class="col-6 col-xl-3">
         <div class="kpi-card amber">
-            <div class="kpi-label">Under Maintenance</div>
-            <div class="kpi-value">@Model.MaintenanceAssets</div>
+            <a class="dashboard-kpi-link" asp-controller="Asset" asp-action="Index" asp-route-status="Under Maintenance">
+                <div class="kpi-label">Under Maintenance</div>
+                <div class="kpi-value">@Model.MaintenanceAssets</div>
+            </a>
             <small class="text-muted">Temporarily unavailable</small>
         </div>
     </div>
     <div class="col-6 col-xl-3">
         <div class="kpi-card teal">
-            <div class="kpi-label">Active Assets</div>
-            <div class="kpi-value">@Model.ActiveAssets</div>
+            <a class="dashboard-kpi-link" asp-controller="Asset" asp-action="Index" asp-route-activeOnly="true">
+                <div class="kpi-label">Active Assets</div>
+                <div class="kpi-value">@Model.ActiveAssets</div>
+            </a>
             <small class="text-muted">Available, assigned or in repair</small>
         </div>
     </div>
     <div class="col-6 col-xl-3">
         <div class="kpi-card slate">
-            <div class="kpi-label">Inactive Assets</div>
-            <div class="kpi-value">@Model.InactiveAssets</div>
+            <a class="dashboard-kpi-link" asp-controller="Asset" asp-action="Index" asp-route-activeOnly="false">
+                <div class="kpi-label">Inactive Assets</div>
+                <div class="kpi-value">@Model.InactiveAssets</div>
+            </a>
             <small class="text-muted">Damaged, retired or lost</small>
         </div>
     </div>
     <div class="col-6 col-xl-3">
         <div class="kpi-card rose">
-            <div class="kpi-label">Retired</div>
-            <div class="kpi-value">@Model.RetiredAssets</div>
+            <a class="dashboard-kpi-link" asp-controller="Asset" asp-action="Index" asp-route-status="Retired">
+                <div class="kpi-label">Retired</div>
+                <div class="kpi-value">@Model.RetiredAssets</div>
+            </a>
             <small class="text-muted">Removed from active use</small>
         </div>
     </div>
     <div class="col-6 col-xl-3">
         <div class="kpi-card blue">
-            <div class="kpi-label">Categories</div>
-            <div class="kpi-value">@Model.CategoryCount</div>
+            <a class="dashboard-kpi-link" asp-controller="Category" asp-action="Index">
+                <div class="kpi-label">Categories</div>
+                <div class="kpi-value">@Model.CategoryCount</div>
+            </a>
             <small class="text-muted">Active asset categories</small>
         </div>
     </div>
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-lg-6">
-        <div class="panel h-100">
-            <h5 class="fw-bold mb-3">Assets by Category</h5>
-            <canvas id="categoryChart" height="220"></canvas>
+    <div class="col-xl-7">
+        <div class="dashboard-panel h-100">
+            <div class="dashboard-panel-header">
+                <div>
+                    <p class="dashboard-eyebrow">Overview</p>
+                    <h5>Operational summary</h5>
+                </div>
+                <a class="btn btn-sm btn-outline-primary" asp-controller="Asset" asp-action="Index">View all</a>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-tile">
+                    <span class="summary-label">Available</span>
+                    <strong>@Model.AvailableAssets</strong>
+                    <small>Ready to assign</small>
+                </div>
+                <div class="summary-tile">
+                    <span class="summary-label">Assigned</span>
+                    <strong>@Model.AssignedAssets</strong>
+                    <small>Currently in use</small>
+                </div>
+                <div class="summary-tile">
+                    <span class="summary-label">Maintenance</span>
+                    <strong>@Model.MaintenanceAssets</strong>
+                    <small>Pending service</small>
+                </div>
+                <div class="summary-tile">
+                    <span class="summary-label">Retired</span>
+                    <strong>@Model.RetiredAssets</strong>
+                    <small>Removed from use</small>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-lg-6">
-        <div class="panel h-100">
-            <h5 class="fw-bold mb-3">Assets by Status</h5>
-            <canvas id="statusChart" height="220"></canvas>
+
+    <div class="col-xl-5">
+        <div class="dashboard-panel h-100">
+            <div class="dashboard-panel-header">
+                <div>
+                    <p class="dashboard-eyebrow">Health</p>
+                    <h5>Inventory status</h5>
+                </div>
+            </div>
+
+            @if (Model.AssetsByStatus.Any())
+            {
+                @foreach (var status in Model.AssetsByStatus)
+                {
+                    var width = maxStatusCount > 0 ? (status.Value / (double)maxStatusCount) * 100 : 0;
+                    <div class="progress-row">
+                        <div class="progress-meta">
+                            <span>@status.Label</span>
+                            <strong>@status.Value</strong>
+                        </div>
+                        <div class="progress-track">
+                            <span style="width: @width%"></span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">No status records are available yet.</div>
+            }
         </div>
     </div>
-    <div class="col-lg-6">
-        <div class="panel h-100">
-            <h5 class="fw-bold mb-3">Assets by Location</h5>
-            <canvas id="locationChart" height="220"></canvas>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-xl-5">
+        <div class="dashboard-panel h-100">
+            <div class="dashboard-panel-header">
+                <div>
+                    <p class="dashboard-eyebrow">Distribution</p>
+                    <h5>By category</h5>
+                </div>
+            </div>
+
+            @if (Model.AssetsByCategory.Any())
+            {
+                @foreach (var category in Model.AssetsByCategory)
+                {
+                    var width = maxCategoryCount > 0 ? (category.Value / (double)maxCategoryCount) * 100 : 0;
+                    <div class="progress-row compact">
+                        <div class="progress-meta">
+                            <span>@category.Label</span>
+                            <strong>@category.Value</strong>
+                        </div>
+                        <div class="progress-track mini">
+                            <span style="width: @width%"></span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">No category usage data is available.</div>
+            }
         </div>
     </div>
-    <div class="col-lg-6">
-        <div class="panel h-100">
-            <h5 class="fw-bold mb-3">Assets by Department</h5>
-            <canvas id="departmentChart" height="220"></canvas>
+
+    <div class="col-xl-7">
+        <div class="dashboard-panel h-100">
+            <div class="dashboard-panel-header">
+                <div>
+                    <p class="dashboard-eyebrow">Tasks</p>
+                    <h5>Management actions</h5>
+                </div>
+            </div>
+
+            <div class="action-grid">
+                <a class="action-link" asp-controller="Asset" asp-action="Create">
+                    <span class="action-icon">＋</span>
+                    <span>
+                        <strong>Add asset</strong>
+                        <small>Register a new item</small>
+                    </span>
+                </a>
+                <a class="action-link" asp-controller="Inventory" asp-action="Index">
+                    <span class="action-icon">▣</span>
+                    <span>
+                        <strong>Inventory</strong>
+                        <small>Track stock movements</small>
+                    </span>
+                </a>
+                <a class="action-link" asp-controller="Category" asp-action="Index">
+                    <span class="action-icon">☰</span>
+                    <span>
+                        <strong>Categories</strong>
+                        <small>Review classification</small>
+                    </span>
+                </a>
+                @if (User.IsInRole("Asset Manager"))
+                {
+                    <a class="action-link" asp-controller="Users" asp-action="Index">
+                        <span class="action-icon">◎</span>
+                        <span>
+                            <strong>Users</strong>
+                            <small>Manage system access</small>
+                        </span>
+                    </a>
+                }
+            </div>
         </div>
     </div>
 </div>
@@ -176,40 +314,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script>
-        const categoryData = @Html.Raw(JsonSerializer.Serialize(Model.AssetsByCategory, chartOptions));
-        const statusData = @Html.Raw(JsonSerializer.Serialize(Model.AssetsByStatus, chartOptions));
-        const locationData = @Html.Raw(JsonSerializer.Serialize(Model.AssetsByLocation, chartOptions));
-        const departmentData = @Html.Raw(JsonSerializer.Serialize(Model.AssetsByDepartment, chartOptions));
-
-        const palette = ["#0f766e", "#2563eb", "#d97706", "#e11d48", "#7c3aed", "#0891b2", "#16a34a", "#475569"];
-
-        function drawChart(id, type, data) {
-            const canvas = document.getElementById(id);
-            if (!canvas) return;
-            new Chart(canvas, {
-                type,
-                data: {
-                    labels: data.map(x => x.label),
-                    datasets: [{
-                        data: data.map(x => x.value),
-                        backgroundColor: palette,
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    plugins: { legend: { position: type === "doughnut" ? "bottom" : "top" } },
-                    scales: type === "bar" ? { y: { beginAtZero: true, ticks: { precision: 0 } } } : {}
-                }
-            });
-        }
-
-        drawChart("categoryChart", "doughnut", categoryData);
-        drawChart("statusChart", "bar", statusData);
-        drawChart("locationChart", "bar", locationData);
-        drawChart("departmentChart", "doughnut", departmentData);
-    </script>
-}

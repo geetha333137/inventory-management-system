@@ -26,7 +26,8 @@ namespace InventoryManagementSystem.Controllers
             string? category,
             string? location,
             string? department,
-            string? assignedTo)
+            string? assignedTo,
+            bool? activeOnly)
         {
             ViewData["Title"] = "Inventory";
             ViewData["PageSubtitle"] = "Search, filter and maintain the organisation asset register.";
@@ -88,12 +89,27 @@ namespace InventoryManagementSystem.Controllers
                 assets = assets.Where(a => string.Equals(a.AssignedTo, assignedTo, StringComparison.OrdinalIgnoreCase));
             }
 
+            if (activeOnly.HasValue)
+            {
+                var activeStatuses = new[]
+                {
+                    AssetStatuses.Available,
+                    AssetStatuses.Assigned,
+                    AssetStatuses.UnderMaintenance
+                };
+
+                assets = activeOnly.Value
+                    ? assets.Where(a => activeStatuses.Contains(a.Status))
+                    : assets.Where(a => !activeStatuses.Contains(a.Status));
+            }
+
             ViewBag.Search = search;
             ViewBag.Status = status;
             ViewBag.Category = category;
             ViewBag.Location = location;
             ViewBag.Department = department;
             ViewBag.AssignedTo = assignedTo;
+            ViewBag.ActiveOnly = activeOnly;
 
             return View(assets.ToList());
         }
