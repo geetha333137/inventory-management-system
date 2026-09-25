@@ -1,0 +1,275 @@
+/*
+    ============================================================
+    NOTIFICATION-ONLY CSS
+    ============================================================
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: transparent;
+}
+
+/* Holds the bell and positions the dropdown. */
+.notification-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+
+    align-items: center;
+}
+
+/* ONLY visible notification control. */
+.notification-button {
+    position: relative;
+
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.notification-button:hover {
+    background: #f8fafc;
+}
+
+.notification-icon {
+  
+    font-size: 23px;
+    line-height: 1;
+}
+
+/* Red unread count. */
+.notification-count {
+    position: absolute;
+
+    top: -5px;
+    right: -5px;
+
+    min-width: 20px;
+    height: 20px;
+
+    padding: 0 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+
+    background: #dc2626;
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.notification-count.hidden {
+    display: none;
+}
+
+/*
+    Dropdown panel.
+    The JS adds "show" after the button is clicked.
+*/
+.notification-panel {
+    position: absolute;
+
+    top: 54px;
+    right: 0;
+
+    z-index: 9999;
+
+    width: 380px;
+
+    display: none;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.16);
+}
+
+.notification-panel.show {
+    display: block;
+}
+
+.notification-panel-header {
+    min-height: 56px;
+
+    padding: 0 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.notification-panel-header h3 {
+    margin: 0;
+    font-size: 17px;
+}
+
+.mark-all-button {
+    border: 0;
+    background: transparent;
+    color: #2563eb;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+#notificationList {
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    position: relative;
+
+    padding:
+        14px
+        42px
+        14px
+        14px;
+
+    border-bottom: 1px solid #f0f0f0;
+
+    cursor: pointer;
+}
+
+.notification-item.unread {
+    background: #eef6ff;
+}
+
+.notification-item.read {
+    background: #ffffff;
+}
+
+.notification-item:hover {
+    background: #f5f5f5;
+}
+
+.notification-title-text {
+    margin-bottom: 5px;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.notification-message-text {
+    color: #555;
+
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.notification-time-text {
+    margin-top: 8px;
+
+    color: #888;
+    font-size: 11px;
+}
+
+.notification-delete-button {
+    position: absolute;
+
+    top: 8px;
+    right: 9px;
+
+    border: 0;
+    background: transparent;
+
+    color: #999;
+
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.notification-delete-button:hover {
+    color: #dc2626;
+}
+
+.notification-panel-footer {
+    padding: 11px;
+
+    text-align: center;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.clear-all-button {
+    padding:
+        8px
+        18px;
+
+    border: 0;
+    border-radius: 6px;
+
+    background: #dc2626;
+    color: #ffffff;
+
+    cursor: pointer;
+}
+
+.clear-all-button:hover {
+    background: #b91c1c;
+}
+
+.empty-notification {
+    padding:
+        32px
+        15px;
+
+    text-align: center;
+
+    color: #777;
+    font-size: 13px;
+}
+
+.notification-error {
+    padding: 20px;
+    color: #b91c1c;
+}
+
+@media (max-width: 500px) {
+
+    .notification-panel {
+
+        width:
+            min(
+                380px,
+                calc(100vw - 30px)
+            );
+
+        right: -5px;
+    }
+}
