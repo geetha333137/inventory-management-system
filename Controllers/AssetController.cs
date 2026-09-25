@@ -1,4 +1,5 @@
 using InventoryManagementSystem.Data;
+using InventoryManagementSystem.Authorization;
 using InventoryManagementSystem.Models;
 using InventoryManagementSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementSystem.Controllers
 {
+    [PermissionAuthorize("VIEW_ASSET")]
     public class AssetController : Controller
     {
         private readonly IAssetService _assetService;
@@ -112,6 +114,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
+        [PermissionAuthorize("CREATE_ASSET")]
         public async Task<IActionResult> Create()
         {
             ViewData["Title"] = "Add Asset";
@@ -122,6 +125,7 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [PermissionAuthorize("CREATE_ASSET")]
         public async Task<IActionResult> Create(Asset asset)
         {
             ValidateAsset(asset);
@@ -154,6 +158,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
+        [PermissionAuthorize("EDIT_ASSET")]
         public async Task<IActionResult> Edit(int id)
         {
             var asset = await _assetService.GetByIdAsync(id);
@@ -172,6 +177,7 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [PermissionAuthorize("EDIT_ASSET")]
         public async Task<IActionResult> Edit(int id, Asset asset)
         {
             if (id != asset.Id)
@@ -209,6 +215,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
+        [PermissionAuthorize("DELETE_ASSET")]
         public async Task<IActionResult> Delete(int id)
         {
             var asset = await _assetService.GetByIdAsync(id);
@@ -227,6 +234,7 @@ namespace InventoryManagementSystem.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [PermissionAuthorize("DELETE_ASSET")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var asset = await _assetService.GetByIdAsync(id);

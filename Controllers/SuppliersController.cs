@@ -1,10 +1,12 @@
 using InventoryManagementSystem.Data;
 using InventoryManagementSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementSystem.Controllers
 {
+    [Authorize(Roles = "Asset Manager")]
     public class SuppliersController : Controller
     {
         private readonly AppDbContext _context;

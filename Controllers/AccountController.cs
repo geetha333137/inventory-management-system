@@ -6,6 +6,7 @@ using InventoryManagementSystem.Services;
 using InventoryManagementSystem.ViewModels;
 using InventoryManagementSystem.Models;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -45,8 +46,14 @@ public class AccountController : Controller
     // =========================================================
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Login()
     {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Dashboard");
+        }
+
         return View();
     }
 
@@ -123,25 +130,9 @@ public class AccountController : Controller
             principal,
             authProperties);
 
-        if (await _permissionService.HasPermissionAsync(
-            user.Id,
-            "VIEW_ASSET"))
-        {
-            return RedirectToAction(
+        return RedirectToAction(
             "Index",
-                "Inventory");
-        }
-
-        if (await _permissionService.HasPermissionAsync(
-            user.Id,
-            "MANAGE_USERS"))
-        {
-            return RedirectToAction(
-            "Index",
-            "Users");
-        }
-
-        return RedirectToAction(nameof(AccessDenied));
+            "Dashboard");
     }
 
     // =========================================================
@@ -156,8 +147,8 @@ public class AccountController : Controller
             "InventoryCookie");
 
         return RedirectToAction(
-            "Login",
-            "Account");
+            "Index",
+            "Home");
     }
 
     // =========================================================
@@ -189,7 +180,6 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Get logged-in user's ID
         var userIdClaim = User.FindFirst(
             ClaimTypes.NameIdentifier);
 
@@ -205,7 +195,6 @@ public class AccountController : Controller
             return RedirectToAction("Login");
         }
 
-        // Find user
         var user = await _db.Users.FindAsync(userId);
 
         if (user == null)
@@ -213,7 +202,6 @@ public class AccountController : Controller
             return RedirectToAction("Login");
         }
 
-        // Verify current password
         bool currentPasswordValid =
             _passwordService.VerifyPassword(
                 user,
@@ -229,13 +217,11 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Hash new password
         user.PasswordHash =
             _passwordService.HashPassword(
                 user,
                 model.NewPassword);
 
-        // Update date
         user.UpdatedDate = DateTime.UtcNow;
 
         await _db.SaveChangesAsync();
@@ -244,8 +230,8 @@ public class AccountController : Controller
             "Password changed successfully.";
 
         return RedirectToAction(
-            "Dashboard",
-            "Home");
+            "Index",
+            "Dashboard");
     }
 
     // =========================================================
@@ -272,15 +258,12 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Find user using email
         var user = await _db.Users
             .FirstOrDefaultAsync(
                 u => u.Email == model.Email);
 
-        // If email doesn't exist, stop here.
         if (user == null)
         {
-            // Do not reveal whether an email exists in the system.
             TempData["ResetMessage"] =
                 "If an account exists with this email, " +
                 "a password reset link has been sent.";
@@ -289,21 +272,18 @@ public class AccountController : Controller
                 "ForgotPassword");
         }
 
-        // Generate secure random token
         byte[] tokenBytes =
             RandomNumberGenerator.GetBytes(32);
 
         string token =
             Convert.ToBase64String(tokenBytes);
 
-        // Create password reset token
         var resetToken = new PasswordResetToken
         {
             UserId = user.Id,
 
             Token = token,
 
-            // Token valid for 30 minutes
             ExpiresAt =
                 DateTime.UtcNow.AddMinutes(30),
 
@@ -351,7 +331,6 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // Store the token only after SMTP accepts the message.
         _db.PasswordResetTokens.Add(resetToken);
         await _db.SaveChangesAsync();
 
@@ -364,76 +343,74 @@ public class AccountController : Controller
     }
 
     // =========================================================
-    // ACCESS DENIED
+    // RESET PASSWORD
     // =========================================================
 
-
-[HttpGet]
-public IActionResult ResetPassword(string token)
-{
-    if (string.IsNullOrWhiteSpace(token))
+    [HttpGet]
+    public IActionResult ResetPassword(string token)
     {
-        return RedirectToAction("ForgotPassword");
-    }
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return RedirectToAction("ForgotPassword");
+        }
 
-    var model = new ResetPasswordViewModel
-    {
-        Token = token
-    };
-
-    return View(model);
-}
-
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> ResetPassword(
-    ResetPasswordViewModel model)
-{
-    if (!ModelState.IsValid)
-    {
-        return View(model);
-    }
-
-    // Find the reset token
-    var resetToken = await _db.PasswordResetTokens
-        .Include(t => t.User)
-        .FirstOrDefaultAsync(t => t.Token == model.Token);
-
-    // Check token validity
-    if (resetToken == null ||
-        resetToken.IsUsed ||
-        resetToken.ExpiresAt < DateTime.UtcNow)
-    {
-        ModelState.AddModelError(
-            string.Empty,
-            "This password reset link is invalid or has expired.");
+        var model = new ResetPasswordViewModel
+        {
+            Token = token
+        };
 
         return View(model);
     }
 
-    // Get the user associated with the token
-    var user = resetToken.User;
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(
+        ResetPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
 
-    // Hash the new password
-    user.PasswordHash =
-        _passwordService.HashPassword(
-            user,
-            model.NewPassword);
+        var resetToken = await _db.PasswordResetTokens
+            .Include(t => t.User)
+            .FirstOrDefaultAsync(t => t.Token == model.Token);
 
-    user.UpdatedDate = DateTime.UtcNow;
+        if (resetToken == null ||
+            resetToken.IsUsed ||
+            resetToken.ExpiresAt < DateTime.UtcNow)
+        {
+            ModelState.AddModelError(
+                string.Empty,
+                "This password reset link is invalid or has expired.");
 
-    // Mark token as used
-    resetToken.IsUsed = true;
+            return View(model);
+        }
 
-    await _db.SaveChangesAsync();
+        var user = resetToken.User;
 
-    TempData["SuccessMessage"] =
-        "Your password has been reset successfully. Please login.";
+        user.PasswordHash =
+            _passwordService.HashPassword(
+                user,
+                model.NewPassword);
 
-    return RedirectToAction(
-        "Login",
-        "Account");
-}
+        user.UpdatedDate = DateTime.UtcNow;
+
+        resetToken.IsUsed = true;
+
+        await _db.SaveChangesAsync();
+
+        TempData["SuccessMessage"] =
+            "Your password has been reset successfully. Please login.";
+
+        return RedirectToAction(
+            "Login",
+            "Account");
+    }
+
+    // =========================================================
+    // ACCESS DENIED
+    // =========================================================
 
     [HttpGet]
     public IActionResult AccessDenied()

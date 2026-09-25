@@ -5,6 +5,7 @@ namespace InventoryManagementSystem.Controllers
 {
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
@@ -13,7 +14,7 @@ namespace InventoryManagementSystem.Controllers
         [Authorize]
         public IActionResult Dashboard()
         {
-            return View();
+            return RedirectToAction("Index", "Dashboard");
         }
 
         public IActionResult Error()

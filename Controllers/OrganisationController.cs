@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InventoryManagementSystem.Data;
 using InventoryManagementSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagementSystem.Controllers
 {
+    [Authorize(Roles = "Asset Manager")]
     public class OrganisationController : Controller
     {
         private readonly AppDbContext _context;

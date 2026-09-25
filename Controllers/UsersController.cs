@@ -1,9 +1,11 @@
 using InventoryManagementSystem.Services;
 using InventoryManagementSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagementSystem.Controllers
 {
+    [Authorize(Roles = "Asset Manager")]
     public class UsersController : Controller
     {
         private readonly IUserService _userService;
