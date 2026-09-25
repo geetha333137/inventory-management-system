@@ -29,9 +29,89 @@
 
 <body>
 
-    <!-- ================= NAVBAR ================= -->
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="authenticated-shell">
+            <aside class="app-sidebar" id="appSidebar">
+                <a class="sidebar-brand" asp-controller="Dashboard" asp-action="Index">
+                    <span class="sidebar-brand-mark">IM</span>
+                    <span>
+                        <strong>Inventory</strong>
+                        <small>Management System</small>
+                    </span>
+                </a>
 
-    <header>
+                <nav class="sidebar-navigation" aria-label="Application navigation">
+                    <span class="sidebar-section-label">Workspace</span>
+                    <a asp-controller="Dashboard" asp-action="Index">
+                        <span class="sidebar-icon">&#9632;</span>
+                        Dashboard
+                    </a>
+                    <a asp-controller="Inventory" asp-action="Index">
+                        <span class="sidebar-icon">&#9633;</span>
+                        Inventory
+                    </a>
+                    <a asp-controller="Asset" asp-action="Index">
+                        <span class="sidebar-icon">&#9645;</span>
+                        Assets
+                    </a>
+                    <a asp-controller="Category" asp-action="Index">
+                        <span class="sidebar-icon">&#9776;</span>
+                        Categories
+                    </a>
+
+                    @if (User.IsInRole("Asset Manager"))
+                    {
+                        <span class="sidebar-section-label">Administration</span>
+                        <a asp-controller="Users" asp-action="Index">
+                            <span class="sidebar-icon">&#9673;</span>
+                            Users
+                        </a>
+                        <a asp-controller="Organisation" asp-action="Index">
+                            <span class="sidebar-icon">&#9638;</span>
+                            Organisation
+                        </a>
+                    }
+                </nav>
+
+                <div class="sidebar-account">
+                    <div class="sidebar-user">
+                        <span class="sidebar-avatar">@User.Identity?.Name?.Substring(0, 1).ToUpperInvariant()</span>
+                        <span>
+                            <strong>@User.Identity?.Name</strong>
+                            <small>@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</small>
+                        </span>
+                    </div>
+                    <form asp-controller="Account" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="sidebar-logout">Log out</button>
+                    </form>
+                </div>
+            </aside>
+
+            <div class="app-main">
+                <header class="app-topbar">
+                    <button class="sidebar-toggle" type="button" onclick="toggleSidebar()" aria-controls="appSidebar" aria-expanded="false">
+                        &#9776;
+                    </button>
+                    <div>
+                        <p class="app-breadcrumb">Inventory workspace</p>
+                        <h1>@ViewData["Title"]</h1>
+                    </div>
+                    <partial name="_NotificationBell" />
+                </header>
+
+                <main role="main" class="app-content">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- ================= PUBLIC NAVBAR ================= -->
+
+        <header>
 
         <nav class="main-navbar">
 
@@ -126,40 +206,19 @@
 
         </nav>
 
-    </header>
+        </header>
 
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <partial name="_NotificationBell" />
+        <main role="main">
+            @RenderBody()
+        </main>
+
+        <footer class="main-footer">
+            <div class="footer-container">
+                <div>© 2026 Inventory Management System</div>
+                <div>Manage your inventory efficiently and securely.</div>
+            </div>
+        </footer>
     }
-
-
-    <!-- ================= PAGE CONTENT ================= -->
-
-    <main role="main">
-
-        @RenderBody()
-
-    </main>
-
-
-    <!-- ================= FOOTER ================= -->
-
-    <footer class="main-footer">
-
-        <div class="footer-container">
-
-            <div>
-                © 2026 Inventory Management System
-            </div>
-
-            <div>
-                Manage your inventory efficiently and securely.
-            </div>
-
-        </div>
-
-    </footer>
 
 
     <!-- ================= SCRIPTS ================= -->
@@ -205,6 +264,15 @@
 
             menu.classList.toggle("show");
 
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("appSidebar");
+            const button = document.querySelector(".sidebar-toggle");
+            if (!sidebar || !button) return;
+
+            const isOpen = sidebar.classList.toggle("is-open");
+            button.setAttribute("aria-expanded", isOpen.toString());
         }
 
     </script>
