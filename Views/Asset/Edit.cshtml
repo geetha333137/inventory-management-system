@@ -1,0 +1,39 @@
+@model Asset
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-semibold mb-1">Edit Asset</h2>
+        <p class="text-muted mb-0">Update the information associated with this asset.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back to Inventory</a>
+</div>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="CreatedDate" />
+    <input type="hidden" asp-for="CreatedByName" />
+    <partial name="_AssetForm" model="Model" />
+
+    <div class="form-section">
+        <div class="form-section-title">Record Information</div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Created</label>
+                <input class="form-control" value="@Model.CreatedDate.ToLocalTime().ToString("dd-MM-yyyy HH:mm") · @(Model.CreatedByName ?? "System")" readonly />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Last Updated</label>
+                <input class="form-control" value="@(Model.UpdatedDate?.ToLocalTime().ToString("dd-MM-yyyy HH:mm") ?? "Not updated yet") · @(Model.UpdatedByName ?? "—")" readonly />
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mb-4">
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary px-4">Update Asset</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

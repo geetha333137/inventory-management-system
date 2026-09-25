@@ -1,0 +1,97 @@
+@model Asset
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-semibold mb-1">Asset Details</h2>
+        <p class="text-muted mb-0">Complete information for @Model.AssetCode.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Asset</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to Inventory</a>
+    </div>
+</div>
+
+<div class="form-section">
+    <div class="form-section-title d-flex justify-content-between align-items-center">
+        <span>Asset Overview</span>
+        <partial name="_AssetStatusBadge" model="Model.Status" />
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="form-label text-muted">Asset Code</label>
+            <div class="fw-semibold fs-5">@Model.AssetCode</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Asset Name</label>
+            <div class="fw-semibold fs-5">@Model.AssetName</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Category</label>
+            <div>@(Model.Category?.Name ?? "Not specified")</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Serial Number</label>
+            <div>@(Model.SerialNumber ?? "Not specified")</div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section">
+    <div class="form-section-title">Purchase Information</div>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="form-label text-muted">Purchase Date</label>
+            <div>@(Model.PurchaseDate?.ToString("dd-MM-yyyy") ?? "Not specified")</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Purchase Cost</label>
+            <div>@(Model.PurchaseCost.HasValue ? $"₹ {Model.PurchaseCost.Value:N2}" : "Not specified")</div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section">
+    <div class="form-section-title">Location & Assignment</div>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="form-label text-muted">Location</label>
+            <div>@(Model.Location ?? "Not specified")</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Department</label>
+            <div>@(Model.Department ?? "Not specified")</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Assigned To</label>
+            <div>@(Model.AssignedTo ?? "Not assigned")</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Status</label>
+            <div><partial name="_AssetStatusBadge" model="Model.Status" /></div>
+        </div>
+    </div>
+</div>
+
+<div class="form-section">
+    <div class="form-section-title">Description</div>
+    <div class="text-muted">@(string.IsNullOrWhiteSpace(Model.Description) ? "No description has been provided." : Model.Description)</div>
+</div>
+
+<div class="form-section">
+    <div class="form-section-title">Record Information</div>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="form-label text-muted">Created</label>
+            <div>@Model.CreatedDate.ToLocalTime().ToString("dd-MM-yyyy HH:mm") · @(Model.CreatedByName ?? "System")</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Last Modified</label>
+            <div>@(Model.UpdatedDate?.ToLocalTime().ToString("dd-MM-yyyy HH:mm") ?? "Not updated") · @(Model.UpdatedByName ?? "—")</div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end gap-2 mb-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Asset</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete Asset</a>
+</div>

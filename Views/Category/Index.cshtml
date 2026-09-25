@@ -1,0 +1,67 @@
+@model List<Category>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-semibold mb-1">Category Management</h2>
+        <p class="text-muted mb-0">Create and manage asset categories used by the inventory.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Add Category</a>
+</div>
+
+<div class="panel">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h5 class="mb-1">Categories</h5>
+            <small class="text-muted">@Model.Count category(s) registered</small>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Description</th>
+                        <th>Assets</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var category in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@category.Name</td>
+                        <td>@(string.IsNullOrWhiteSpace(category.Description) ? "No description" : category.Description)</td>
+                        <td>@category.Assets.Count</td>
+                        <td>
+                            @if (category.IsActive)
+                            {
+                                <span class="status-badge badge-available">Active</span>
+                            }
+                            else
+                            {
+                                <span class="status-badge badge-retired">Inactive</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-outline-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h5>No Categories Found</h5>
+            <p>Create your first asset category to start organising inventory.</p>
+            <a asp-action="Create" class="btn btn-primary">Add First Category</a>
+        </div>
+    }
+</div>

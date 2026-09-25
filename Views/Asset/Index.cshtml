@@ -1,0 +1,194 @@
+@model List<Asset>
+
+@{
+    int totalAssets = ViewBag.TotalAssets ?? 0;
+    int availableAssets = ViewBag.AvailableAssets ?? 0;
+    int assignedAssets = ViewBag.AssignedAssets ?? 0;
+    int maintenanceAssets = ViewBag.MaintenanceAssets ?? 0;
+    var categories = ViewBag.Categories as List<Category> ?? new List<Category>();
+    var locations = ViewBag.Locations as List<string> ?? new List<string>();
+    var departments = ViewBag.Departments as List<string> ?? new List<string>();
+    var assignedUsers = ViewBag.AssignedUsers as List<string> ?? new List<string>();
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Asset Inventory</h2>
+        <p class="text-muted mb-0">View, search and manage all organisation assets.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Add New Asset
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="kpi-card teal"><div class="kpi-label">Total</div><div class="kpi-value">@totalAssets</div></div></div>
+    <div class="col-md-3"><div class="kpi-card green"><div class="kpi-label">Available</div><div class="kpi-value">@availableAssets</div></div></div>
+    <div class="col-md-3"><div class="kpi-card blue"><div class="kpi-label">Assigned</div><div class="kpi-value">@assignedAssets</div></div></div>
+    <div class="col-md-3"><div class="kpi-card amber"><div class="kpi-label">Maintenance</div><div class="kpi-value">@maintenanceAssets</div></div></div>
+</div>
+
+<div class="panel mb-4">
+    <h5 class="fw-bold mb-3">Search & Filter</h5>
+    <form asp-action="Index" method="get">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Search</label>
+                <input type="text" name="search" value="@ViewBag.Search" class="form-control"
+                       placeholder="Code, name, serial, location or assigned user" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold">Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All</option>
+                    @foreach (var status in AssetStatuses.All)
+                    {
+                        if (ViewBag.Status == status)
+                        {
+                            <option value="@status" selected>@status</option>
+                        }
+                        else
+                        {
+                            <option value="@status">@status</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold">Category</label>
+                <select name="category" class="form-select">
+                    <option value="">All</option>
+                    @foreach (var category in categories)
+                    {
+                        if (ViewBag.Category == category.Name)
+                        {
+                            <option value="@category.Name" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.Name">@category.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold">Location</label>
+                <select name="location" class="form-select">
+                    <option value="">All</option>
+                    @foreach (var location in locations)
+                    {
+                        if (ViewBag.Location == location)
+                        {
+                            <option value="@location" selected>@location</option>
+                        }
+                        else
+                        {
+                            <option value="@location">@location</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-semibold">Department</label>
+                <select name="department" class="form-select">
+                    <option value="">All</option>
+                    @foreach (var department in departments)
+                    {
+                        if (ViewBag.Department == department)
+                        {
+                            <option value="@department" selected>@department</option>
+                        }
+                        else
+                        {
+                            <option value="@department">@department</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Assigned User</label>
+                <select name="assignedTo" class="form-select">
+                    <option value="">All</option>
+                    @foreach (var person in assignedUsers)
+                    {
+                        if (ViewBag.AssignedTo == person)
+                        {
+                            <option value="@person" selected>@person</option>
+                        }
+                        else
+                        {
+                            <option value="@person">@person</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">Clear</a>
+        </div>
+    </form>
+</div>
+
+<div class="panel">
+    <div class="d-flex justify-content-between mb-3">
+        <div>
+            <h5 class="fw-bold mb-1">Asset List</h5>
+            <small class="text-muted">Showing @Model.Count asset(s)</small>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Asset Code</th>
+                        <th>Asset Name</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Last Updated</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var asset in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@asset.AssetCode</td>
+                        <td>@asset.AssetName</td>
+                        <td>@(asset.Category?.Name ?? "—")</td>
+                        <td>@(string.IsNullOrWhiteSpace(asset.Location) ? "—" : asset.Location)</td>
+                        <td><partial name="_AssetStatusBadge" model="asset.Status" /></td>
+                        <td>@(string.IsNullOrWhiteSpace(asset.AssignedTo) ? "Not assigned" : asset.AssignedTo)</td>
+                        <td>@((asset.UpdatedDate ?? asset.CreatedDate).ToLocalTime().ToString("dd MMM yyyy"))</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@asset.Id" title="View">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a class="btn btn-sm btn-outline-warning" asp-action="Edit" asp-route-id="@asset.Id" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@asset.Id" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="fs-1">📦</div>
+            <h5 class="mt-3">No Assets Found</h5>
+            <p>There are no assets matching your search or filter criteria.</p>
+            <a asp-action="Create" class="btn btn-primary">Add First Asset</a>
+        </div>
+    }
+</div>

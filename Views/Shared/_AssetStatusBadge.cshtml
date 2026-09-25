@@ -1,0 +1,7 @@
+@model string?
+
+@{
+    var status = Model ?? "Unknown";
+}
+
+<span class="status-badge @AssetStatuses.BadgeClass(status)">@status</span>

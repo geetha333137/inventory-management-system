@@ -1,0 +1,43 @@
+@model Category
+
+<div class="mb-4">
+    <h2 class="fw-semibold mb-1">Delete Category</h2>
+    <p class="text-muted mb-0">Review the category before deleting it.</p>
+</div>
+
+<div class="form-section">
+    @if ((ViewBag.AssetCount as int? ?? 0) > 0)
+    {
+        <div class="alert alert-warning">
+            This category has @ViewBag.AssetCount linked asset(s) and cannot be deleted until those assets are reassigned.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">
+            <strong>Warning.</strong> This category will be permanently removed.
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="form-label text-muted">Category Name</label>
+            <div class="fw-semibold">@Model.Name</div>
+        </div>
+        <div class="col-12">
+            <label class="form-label text-muted">Description</label>
+            <div>@(string.IsNullOrWhiteSpace(Model.Description) ? "No description" : Model.Description)</div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end gap-2 mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    @if ((ViewBag.AssetCount as int? ?? 0) == 0)
+    {
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Yes, Delete Category</button>
+        </form>
+    }
+</div>
