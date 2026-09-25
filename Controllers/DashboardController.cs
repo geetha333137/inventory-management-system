@@ -1,7 +1,7 @@
-using InvertoryManagementSystem.Services.Interfaces;
+using InventoryManagementSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InvertoryManagementSystem.Controllers
+namespace InventoryManagementSystem.Controllers
 {
     public class DashboardController : Controller
     {

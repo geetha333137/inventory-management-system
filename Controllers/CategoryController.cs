@@ -1,9 +1,9 @@
-using InvertoryManagementSystem.Data;
-using InvertoryManagementSystem.Models;
+using InventoryManagementSystem.Data;
+using InventoryManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace InvertoryManagementSystem.Controllers
+namespace InventoryManagementSystem.Controllers
 {
     public class CategoryController : Controller
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace InvertoryManagementSystem.Models
+namespace InventoryManagementSystem.Models
 {
     public class AuditLog
     {

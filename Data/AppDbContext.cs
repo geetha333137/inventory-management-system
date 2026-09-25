@@ -21,6 +21,12 @@ public class AppDbContext : DbContext
     public DbSet<PasswordResetToken> PasswordResetTokens
         => Set<PasswordResetToken>();
 
+    public DbSet<Asset> Assets => Set<Asset>();
+
+    public DbSet<Category> Categories => Set<Category>();
+
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -68,6 +74,20 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Permission>()
             .HasIndex(p => p.Name)
+            .IsUnique();
+
+        modelBuilder.Entity<Asset>()
+            .HasIndex(a => a.AssetCode)
+            .IsUnique();
+
+        modelBuilder.Entity<Asset>()
+            .HasOne(a => a.Category)
+            .WithMany(c => c.Assets)
+            .HasForeignKey(a => a.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Category>()
+            .HasIndex(c => c.Name)
             .IsUnique();
     }
 }

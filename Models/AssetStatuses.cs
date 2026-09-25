@@ -1,4 +1,4 @@
-namespace InvertoryManagementSystem.Models
+namespace InventoryManagementSystem.Models
 {
     public static class AssetStatuses
     {

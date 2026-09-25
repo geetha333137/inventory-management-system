@@ -1,4 +1,4 @@
-namespace InvertoryManagementSystem.Models.ViewModels
+namespace InventoryManagementSystem.Models.ViewModels
 {
     public class DashboardViewModel
     {

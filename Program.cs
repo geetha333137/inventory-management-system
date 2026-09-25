@@ -1,5 +1,7 @@
 using InventoryManagementSystem.Data;
 using InventoryManagementSystem.Services;
+using InventoryManagementSystem.Services.Implementations;
+using InventoryManagementSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -44,9 +46,6 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
@@ -57,6 +56,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
     SeedData.Initialize(db);
+    DbInitializer.Seed(db);
 }
 
 // Configure the HTTP request pipeline.

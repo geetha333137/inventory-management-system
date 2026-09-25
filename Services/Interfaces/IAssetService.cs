@@ -1,6 +1,6 @@
-using InvertoryManagementSystem.Models;
+using InventoryManagementSystem.Models;
 
-namespace InvertoryManagementSystem.Services.Interfaces
+namespace InventoryManagementSystem.Services.Interfaces
 {
     public interface IAssetService
     {

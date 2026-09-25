@@ -1,11 +1,11 @@
-using InvertoryManagementSystem.Data;
-using InvertoryManagementSystem.Models;
-using InvertoryManagementSystem.Services.Interfaces;
+using InventoryManagementSystem.Data;
+using InventoryManagementSystem.Models;
+using InventoryManagementSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace InvertoryManagementSystem.Controllers
+namespace InventoryManagementSystem.Controllers
 {
     public class AssetController : Controller
     {

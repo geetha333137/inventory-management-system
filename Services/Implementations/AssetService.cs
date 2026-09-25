@@ -1,9 +1,9 @@
-using InvertoryManagementSystem.Data;
-using InvertoryManagementSystem.Models;
-using InvertoryManagementSystem.Services.Interfaces;
+using InventoryManagementSystem.Data;
+using InventoryManagementSystem.Models;
+using InventoryManagementSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace InvertoryManagementSystem.Services.Implementations
+namespace InventoryManagementSystem.Services.Implementations
 {
     public class AssetService : IAssetService
     {

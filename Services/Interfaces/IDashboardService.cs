@@ -1,6 +1,6 @@
-using InvertoryManagementSystem.Models.ViewModels;
+using InventoryManagementSystem.Models.ViewModels;
 
-namespace InvertoryManagementSystem.Services.Interfaces
+namespace InventoryManagementSystem.Services.Interfaces
 {
     public interface IDashboardService
     {

@@ -1,6 +1,6 @@
-using InvertoryManagementSystem.Models;
+using InventoryManagementSystem.Models;
 
-namespace InvertoryManagementSystem.Data
+namespace InventoryManagementSystem.Data
 {
     public static class DbInitializer
     {

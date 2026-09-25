@@ -1,10 +1,10 @@
-using InvertoryManagementSystem.Data;
-using InvertoryManagementSystem.Models;
-using InvertoryManagementSystem.Models.ViewModels;
-using InvertoryManagementSystem.Services.Interfaces;
+using InventoryManagementSystem.Data;
+using InventoryManagementSystem.Models;
+using InventoryManagementSystem.Models.ViewModels;
+using InventoryManagementSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace InvertoryManagementSystem.Services.Implementations
+namespace InventoryManagementSystem.Services.Implementations
 {
     public class DashboardService : IDashboardService
     {
