@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OrganisationProfile.OrganisationProfile.Data;
-using OrganisationProfile.OrganisationProfile.Models;
+using InventoryManagementSystem.Data;
+using InventoryManagementSystem.Models;
 
-namespace OrganisationProfile.OrganisationProfile.Controllers
+namespace InventoryManagementSystem.Controllers
 {
     public class OrganisationController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _environment;
 
         public OrganisationController(
-            ApplicationDbContext context,
+            AppDbContext context,
             IWebHostEnvironment environment)
         {
             _context = context;

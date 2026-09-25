@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OrganisationProfile.OrganisationProfile.Models
+namespace InventoryManagementSystem.Models
 {
     public class Organisation
     {
