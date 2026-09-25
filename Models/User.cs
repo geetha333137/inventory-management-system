@@ -29,4 +29,28 @@ public class User
     public DateTime UpdatedDate { get; set; }
 
     public Role Role { get; set; } = null!;
+
+    public string FullName
+    {
+        get => string.Join(' ', new[] { FirstName, LastName }
+            .Where(name => !string.IsNullOrWhiteSpace(name)));
+        set
+        {
+            var parts = value.Trim().Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            FirstName = parts.ElementAtOrDefault(0) ?? string.Empty;
+            LastName = parts.ElementAtOrDefault(1) ?? string.Empty;
+        }
+    }
+
+    public string? PhoneNumber
+    {
+        get => MobileNumber;
+        set => MobileNumber = value;
+    }
+
+    public DateTime CreatedAt
+    {
+        get => CreatedDate;
+        set => CreatedDate = value;
+    }
 }
