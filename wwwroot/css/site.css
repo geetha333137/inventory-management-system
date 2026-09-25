@@ -1690,6 +1690,17 @@ html {
     max-width: 800px;
 }
 
+.dashboard-kpi-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.dashboard-kpi-link:hover .kpi-label,
+.dashboard-kpi-link:focus-visible .kpi-label {
+    color: #0f766e;
+}
+
 /* =========================================
    AUTHENTICATED APPLICATION SHELL
    ========================================= */

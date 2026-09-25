@@ -8,9 +8,29 @@
 <div class="row g-3 mb-4">
     <div class="col-6 col-xl-3">
         <div class="kpi-card teal">
-            <div class="kpi-label">Total Assets</div>
-            <div class="kpi-value">@Model.TotalAssets</div>
+            <a class="dashboard-kpi-link" asp-controller="Asset" asp-action="Index">
+                <div class="kpi-label">Total Assets</div>
+                <div class="kpi-value">@Model.TotalAssets</div>
+            </a>
             <small class="text-muted">Registered inventory items</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card blue">
+            <a class="dashboard-kpi-link" asp-controller="Users" asp-action="Index">
+                <div class="kpi-label">Total Users</div>
+                <div class="kpi-value">@Model.TotalUsers</div>
+            </a>
+            <small class="text-muted">People with system access</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card amber">
+            <a class="dashboard-kpi-link" asp-controller="Inventory" asp-action="Index">
+                <div class="kpi-label">Total Inventory</div>
+                <div class="kpi-value">@Model.TotalInventoryItems</div>
+            </a>
+            <small class="text-muted">Tracked stock items</small>
         </div>
     </div>
     <div class="col-6 col-xl-3">

@@ -34,6 +34,22 @@ namespace InventoryManagementSystem.Controllers
             return View(new Category { IsActive = true });
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var category = await _context.Categories
+                .Include(c => c.Assets)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Title"] = category.Name;
+            ViewData["PageSubtitle"] = "Assets assigned to this category.";
+            return View(category);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Category category)

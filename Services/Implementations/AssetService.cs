@@ -2,16 +2,21 @@ using InventoryManagementSystem.Data;
 using InventoryManagementSystem.Models;
 using InventoryManagementSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using NotificationButtonOnly_MVC.Services;
 
 namespace InventoryManagementSystem.Services.Implementations
 {
     public class AssetService : IAssetService
     {
         private readonly AppDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public AssetService(AppDbContext context)
+        public AssetService(
+            AppDbContext context,
+            INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<List<Asset>> GetAllAsync()
@@ -56,6 +61,11 @@ namespace InventoryManagementSystem.Services.Implementations
                 asset.Id,
                 performedBy,
                 $"New Inventory Added: {asset.AssetName} – {asset.AssetCode} has been added to the inventory.");
+
+            await _notificationService.CreateAsync(
+                "ADD",
+                asset.AssetName,
+                asset.AssetCode);
         }
 
         public async Task UpdateAsync(Asset asset, string performedBy)
@@ -89,6 +99,11 @@ namespace InventoryManagementSystem.Services.Implementations
                 existingAsset.Id,
                 performedBy,
                 $"Inventory Updated: {existingAsset.AssetName} – {existingAsset.AssetCode} has been updated.");
+
+            await _notificationService.CreateAsync(
+                "UPDATE",
+                existingAsset.AssetName,
+                existingAsset.AssetCode);
         }
 
         public async Task DeleteAsync(int id, string performedBy)
@@ -111,6 +126,8 @@ namespace InventoryManagementSystem.Services.Implementations
                 id,
                 performedBy,
                 $"Inventory Deleted: {name} – {code} has been removed from the inventory.");
+
+            await _notificationService.CreateAsync("DELETE", name, code);
         }
 
         private async Task AddAuditAsync(string action, int entityId, string performedBy, string description)

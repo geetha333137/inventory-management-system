@@ -3,6 +3,8 @@ namespace InventoryManagementSystem.Models.ViewModels
     public class DashboardViewModel
     {
         public int TotalAssets { get; set; }
+        public int TotalUsers { get; set; }
+        public int TotalInventoryItems { get; set; }
         public int ActiveAssets { get; set; }
         public int InactiveAssets { get; set; }
         public int AvailableAssets { get; set; }

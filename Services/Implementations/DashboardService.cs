@@ -24,6 +24,8 @@ namespace InventoryManagementSystem.Services.Implementations
             var viewModel = new DashboardViewModel
             {
                 TotalAssets = assets.Count,
+                TotalUsers = await _context.Users.CountAsync(),
+                TotalInventoryItems = await _context.InventoryItems.CountAsync(),
                 ActiveAssets = assets.Count(a => AssetStatuses.Active.Contains(a.Status)),
                 InactiveAssets = assets.Count(a => !AssetStatuses.Active.Contains(a.Status)),
                 AvailableAssets = CountByStatus(assets, AssetStatuses.Available),

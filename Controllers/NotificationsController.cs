@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using NotificationButtonOnly_MVC.Models;
 using NotificationButtonOnly_MVC.Services;
 
 namespace NotificationButtonOnly_MVC.Controllers;
 
 // HTTP/API endpoints for the notification module only.
+[Authorize]
 public class NotificationsController : Controller
 {
     private readonly INotificationService _service;

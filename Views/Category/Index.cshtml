@@ -33,9 +33,15 @@
                 @foreach (var category in Model)
                 {
                     <tr>
-                        <td class="fw-semibold">@category.Name</td>
+                        <td class="fw-semibold">
+                            <a asp-action="Details" asp-route-id="@category.Id">@category.Name</a>
+                        </td>
                         <td>@(string.IsNullOrWhiteSpace(category.Description) ? "No description" : category.Description)</td>
-                        <td>@category.Assets.Count</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@category.Id" class="text-decoration-none">
+                                @category.Assets.Count
+                            </a>
+                        </td>
                         <td>
                             @if (category.IsActive)
                             {
@@ -47,8 +53,15 @@
                             }
                         </td>
                         <td class="text-end">
-                            <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-outline-warning">Edit</a>
-                            <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                            <a asp-action="Details" asp-route-id="@category.Id" class="btn btn-sm btn-outline-primary" title="View details" aria-label="View details">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-outline-warning" title="Edit category" aria-label="Edit category">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-sm btn-outline-danger" title="Delete category" aria-label="Delete category">
+                                <i class="bi bi-trash"></i>
+                            </a>
                         </td>
                     </tr>
                 }
