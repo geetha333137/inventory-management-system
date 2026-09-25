@@ -1,0 +1,190 @@
+@model OrganisationProfile.OrganisationProfile.Models.Organisation
+
+@{
+    ViewData["Title"] = "Organisation Profile";
+}
+
+<div class="organisation-page">
+
+    <!-- Page Header -->
+    <div class="organisation-header">
+
+        <div>
+            <div class="organisation-breadcrumb">
+                Administration / Organisation Profile
+            </div>
+
+            <h1>Organisation Profile</h1>
+
+            <p>
+                Manage your organisation information and contact details.
+            </p>
+        </div>
+
+        <a asp-action="Edit" class="organisation-edit-btn">
+            ✏ Edit Profile
+        </a>
+
+    </div>
+
+
+    <!-- Success Message -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="organisation-alert success">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    <!-- Error Message -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="organisation-alert error">
+            ⚠ @TempData["Error"]
+        </div>
+    }
+
+
+    <!-- Main Profile Card -->
+    <div class="organisation-profile-card">
+
+        <!-- Profile Top -->
+        <div class="organisation-profile-top">
+
+            <!-- Logo -->
+            <div class="organisation-logo-section">
+
+                @if (!string.IsNullOrEmpty(Model.LogoPath))
+                {
+                    <img src="@Model.LogoPath"
+                         alt="Organisation Logo"
+                         class="organisation-logo" />
+                }
+                else
+                {
+                    <div class="organisation-logo-placeholder">
+                        🏢
+                    </div>
+                }
+
+            </div>
+
+
+            <!-- Organisation Basic Information -->
+            <div class="organisation-basic-info">
+
+                <span class="organisation-label">
+                    ORGANISATION
+                </span>
+
+                <h2>
+                    @Model.OrganisationName
+                </h2>
+
+                <div class="organisation-code">
+                    Code: @Model.OrganisationCode
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Contact Information -->
+        <div class="organisation-section">
+
+            <div class="organisation-section-title">
+                <span class="section-icon">📞</span>
+                Contact Information
+            </div>
+
+            <div class="organisation-info-grid">
+
+                <div class="organisation-info-item">
+                    <span class="info-label">Phone Number</span>
+                    <span class="info-value">@Model.Phone</span>
+                </div>
+
+                <div class="organisation-info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">@Model.Email</span>
+                </div>
+
+                <div class="organisation-info-item">
+                    <span class="info-label">Website</span>
+
+                    @if (!string.IsNullOrEmpty(Model.Website))
+                    {
+                        <a href="@Model.Website"
+                           target="_blank"
+                           class="info-link">
+                            @Model.Website
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="info-value">Not provided</span>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Address Information -->
+        <div class="organisation-section">
+
+            <div class="organisation-section-title">
+                <span class="section-icon">📍</span>
+                Address Information
+            </div>
+
+            <div class="organisation-info-grid">
+
+                <div class="organisation-info-item full-width">
+                    <span class="info-label">Address</span>
+                    <span class="info-value">@Model.Address</span>
+                </div>
+
+                <div class="organisation-info-item">
+                    <span class="info-label">City</span>
+                    <span class="info-value">@Model.City</span>
+                </div>
+
+                <div class="organisation-info-item">
+                    <span class="info-label">State</span>
+                    <span class="info-value">@Model.State</span>
+                </div>
+
+                <div class="organisation-info-item">
+                    <span class="info-label">Country</span>
+                    <span class="info-value">@Model.Country</span>
+                </div>
+
+                <div class="organisation-info-item">
+                    <span class="info-label">Postal Code</span>
+                    <span class="info-value">@Model.PostalCode</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Last Updated -->
+        <div class="organisation-updated">
+
+            <span>
+                Last updated
+            </span>
+
+            <strong>
+                @Model.UpdatedDate.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
