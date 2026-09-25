@@ -30,6 +30,9 @@ public class User
 
     public Role Role { get; set; } = null!;
 
+    public ICollection<UserPermission> UserPermissions { get; set; }
+        = new List<UserPermission>();
+
     public string FullName
     {
         get => string.Join(' ', new[] { FirstName, LastName }

@@ -129,7 +129,7 @@ public class AccountController : Controller
         {
             return RedirectToAction(
             "Index",
-            "Dashboard");
+                "Inventory");
         }
 
         if (await _permissionService.HasPermissionAsync(

@@ -7,9 +7,9 @@ namespace InventoryManagementSystem.Controllers
 {
     public class SuppliersController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public SuppliersController(ApplicationDbContext context)
+        public SuppliersController(AppDbContext context)
         {
             _context = context;
         }

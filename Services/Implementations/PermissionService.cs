@@ -24,10 +24,19 @@ public class PermissionService : IPermissionService
             return false;
         }
 
-        return await _db.RolePermissions
-            .Include(rp => rp.Permission)
+        var hasRolePermission = await _db.RolePermissions
             .AnyAsync(rp =>
                 rp.RoleId == user.RoleId &&
                 rp.Permission.Name == permissionName);
+
+        if (hasRolePermission)
+        {
+            return true;
+        }
+
+        return await _db.UserPermissions
+            .AnyAsync(up =>
+                up.UserId == userId &&
+                up.Permission.Name == permissionName);
     }
 }

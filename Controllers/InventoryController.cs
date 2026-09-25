@@ -1,3 +1,4 @@
+using InventoryManagementSystem.Authorization;
 using InventoryManagementSystem.Data;
 using InventoryManagementSystem.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,13 +8,14 @@ namespace InventoryManagementSystem.Controllers
 {
     public class InventoryController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public InventoryController(ApplicationDbContext context)
+        public InventoryController(AppDbContext context)
         {
             _context = context;
         }
 
+        [PermissionAuthorize("VIEW_ASSET")]
         public async Task<IActionResult> Index(string? search)
         {
             var query = _context.InventoryItems.AsQueryable();
