@@ -1,0 +1,46 @@
+@model Asset
+
+<div class="mb-4">
+    <h2 class="fw-semibold mb-1">Delete Asset</h2>
+    <p class="text-muted mb-0">Are you sure you want to delete this asset?</p>
+</div>
+
+<div class="form-section">
+    <div class="alert alert-danger">
+        <strong>Warning.</strong> You are about to permanently delete @Model.AssetName (@Model.AssetCode). This action cannot be undone.
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="form-label text-muted">Asset Code</label>
+            <div class="fw-semibold">@Model.AssetCode</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Asset Name</label>
+            <div class="fw-semibold">@Model.AssetName</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Category</label>
+            <div>@(Model.Category?.Name ?? "Not specified")</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Status</label>
+            <div><partial name="_AssetStatusBadge" model="Model.Status" /></div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Location</label>
+            <div>@(Model.Location ?? "Not specified")</div>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label text-muted">Assigned To</label>
+            <div>@(Model.AssignedTo ?? "Not assigned")</div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-end gap-2 mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Yes, Delete Asset</button>
+    </form>
+</div>

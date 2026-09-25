@@ -1,0 +1,195 @@
+@model DashboardViewModel
+@using System.Text.Json
+
+@{
+    var chartOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card teal">
+            <div class="kpi-label">Total Assets</div>
+            <div class="kpi-value">@Model.TotalAssets</div>
+            <small class="text-muted">Registered inventory items</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card green">
+            <div class="kpi-label">Available</div>
+            <div class="kpi-value">@Model.AvailableAssets</div>
+            <small class="text-muted">Ready for assignment</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card blue">
+            <div class="kpi-label">Assigned</div>
+            <div class="kpi-value">@Model.AssignedAssets</div>
+            <small class="text-muted">Currently in use</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card amber">
+            <div class="kpi-label">Under Maintenance</div>
+            <div class="kpi-value">@Model.MaintenanceAssets</div>
+            <small class="text-muted">Temporarily unavailable</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card teal">
+            <div class="kpi-label">Active Assets</div>
+            <div class="kpi-value">@Model.ActiveAssets</div>
+            <small class="text-muted">Available, assigned or in repair</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card slate">
+            <div class="kpi-label">Inactive Assets</div>
+            <div class="kpi-value">@Model.InactiveAssets</div>
+            <small class="text-muted">Damaged, retired or lost</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card rose">
+            <div class="kpi-label">Retired</div>
+            <div class="kpi-value">@Model.RetiredAssets</div>
+            <small class="text-muted">Removed from active use</small>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="kpi-card blue">
+            <div class="kpi-label">Categories</div>
+            <div class="kpi-value">@Model.CategoryCount</div>
+            <small class="text-muted">Active asset categories</small>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-6">
+        <div class="panel h-100">
+            <h5 class="fw-bold mb-3">Assets by Category</h5>
+            <canvas id="categoryChart" height="220"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel h-100">
+            <h5 class="fw-bold mb-3">Assets by Status</h5>
+            <canvas id="statusChart" height="220"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel h-100">
+            <h5 class="fw-bold mb-3">Assets by Location</h5>
+            <canvas id="locationChart" height="220"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel h-100">
+            <h5 class="fw-bold mb-3">Assets by Department</h5>
+            <canvas id="departmentChart" height="220"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-7">
+        <div class="panel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Recent Assets</h5>
+                <a class="btn btn-sm btn-primary" asp-controller="Asset" asp-action="Create">Add Asset</a>
+            </div>
+            @if (Model.RecentAssets.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var asset in Model.RecentAssets)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@asset.AssetCode</td>
+                                <td>
+                                    <a asp-controller="Asset" asp-action="Details" asp-route-id="@asset.Id">@asset.AssetName</a>
+                                </td>
+                                <td>@(asset.Category?.Name ?? "—")</td>
+                                <td><partial name="_AssetStatusBadge" model="asset.Status" /></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">No assets have been registered yet.</div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="panel h-100">
+            <h5 class="fw-bold mb-3">Recent Inventory Activities</h5>
+            @if (Model.RecentActivities.Any())
+            {
+                @foreach (var item in Model.RecentActivities)
+                {
+                    <div class="activity-item">
+                        <span class="activity-dot"></span>
+                        <div>
+                            <div class="fw-semibold">@item.Action · @item.EntityName</div>
+                            <div class="small text-muted">@item.Description</div>
+                            <div class="small text-muted mt-1">@item.PerformedBy · @item.CreatedDate.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">No recent activity yet. Add or update an asset to see the audit trail.</div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        const categoryData = @Html.Raw(JsonSerializer.Serialize(Model.AssetsByCategory, chartOptions));
+        const statusData = @Html.Raw(JsonSerializer.Serialize(Model.AssetsByStatus, chartOptions));
+        const locationData = @Html.Raw(JsonSerializer.Serialize(Model.AssetsByLocation, chartOptions));
+        const departmentData = @Html.Raw(JsonSerializer.Serialize(Model.AssetsByDepartment, chartOptions));
+
+        const palette = ["#0f766e", "#2563eb", "#d97706", "#e11d48", "#7c3aed", "#0891b2", "#16a34a", "#475569"];
+
+        function drawChart(id, type, data) {
+            const canvas = document.getElementById(id);
+            if (!canvas) return;
+            new Chart(canvas, {
+                type,
+                data: {
+                    labels: data.map(x => x.label),
+                    datasets: [{
+                        data: data.map(x => x.value),
+                        backgroundColor: palette,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    plugins: { legend: { position: type === "doughnut" ? "bottom" : "top" } },
+                    scales: type === "bar" ? { y: { beginAtZero: true, ticks: { precision: 0 } } } : {}
+                }
+            });
+        }
+
+        drawChart("categoryChart", "doughnut", categoryData);
+        drawChart("statusChart", "bar", statusData);
+        drawChart("locationChart", "bar", locationData);
+        drawChart("departmentChart", "doughnut", departmentData);
+    </script>
+}
