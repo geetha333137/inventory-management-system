@@ -1,0 +1,97 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="p-4 p-md-5 mb-4 rounded-4 bg-dark text-white shadow-sm">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <p class="text-uppercase text-secondary mb-2">Dashboard</p>
+            <h1 class="display-5 fw-bold mb-3">Welcome to Inventory Management System</h1>
+            <p class="lead mb-0 text-light-emphasis">
+                Manage users, track stock, and keep your inventory organized with a clean and efficient system.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <div class="bg-light text-dark rounded-3 p-3 d-inline-block">
+                <div class="small text-muted">System Status</div>
+                <div class="fs-3 fw-bold">Online</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100 bg-light">
+            <div class="card-body">
+                <div class="small text-muted">Total Inventory</div>
+                <div class="fs-3 fw-bold mt-2">--</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100 bg-light">
+            <div class="card-body">
+                <div class="small text-muted">Low Stock</div>
+                <div class="fs-3 fw-bold mt-2">--</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100 bg-light">
+            <div class="card-body">
+                <div class="small text-muted">Suppliers</div>
+                <div class="fs-3 fw-bold mt-2">--</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100 bg-light">
+            <div class="card-body">
+                <div class="small text-muted">Users</div>
+                <div class="fs-3 fw-bold mt-2">--</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-xl-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Overview</h5>
+                    <span class="badge bg-light text-dark">No Data</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">No records available</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="mb-3">Recent Activity</h5>
+                <div class="border rounded p-3 text-center text-muted bg-light">
+                    No recent activity
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
