@@ -1,81 +1,111 @@
 @model InventoryManagementSystem.ViewModels.LoginViewModel
 
+@{
+    Layout = "_PublicLayout";
+    ViewData["Title"] = "Login";
+}
+
 <div class="auth-page">
+
     <section class="auth-intro">
         <p class="eyebrow">Operations, organized</p>
+
         <h1>Keep every asset in view.</h1>
-        <p class="intro-copy">A focused workspace for managing inventory, permissions, and the people who keep your organization moving.</p>
+
+        <p class="intro-copy">
+            A focused workspace for managing inventory, permissions,
+            and the people who keep your organization moving.
+        </p>
     </section>
+
 
     <section class="auth-card">
+
         <div class="auth-card-header">
             <h2>Welcome back</h2>
-            <p>Sign in to continue to your inventory workspace.</p>
+
+            <p>
+                Sign in to continue to your inventory workspace.
+            </p>
         </div>
 
-    <form asp-controller="Account"
-          asp-action="Login"
-          method="post">
 
-        @Html.AntiForgeryToken()
+        <form asp-controller="Account"
+              asp-action="Login"
+              method="post">
 
-        <div class="form-field">
-            <label asp-for="UsernameOrEmail">
-                Username or Email
-            </label>
+            @Html.AntiForgeryToken()
 
-            <br />
 
-            <input asp-for="UsernameOrEmail" />
+            <div class="form-field">
 
-            <span asp-validation-for="UsernameOrEmail"></span>
+                <label asp-for="UsernameOrEmail">
+                    Username or Email
+                </label>
+
+                <input asp-for="UsernameOrEmail" />
+
+                <span asp-validation-for="UsernameOrEmail"></span>
+
+            </div>
+
+
+            <div class="form-field">
+
+                <label asp-for="Password">
+                    Password
+                </label>
+
+                <input asp-for="Password"
+                       type="password" />
+
+                <span asp-validation-for="Password"></span>
+
+            </div>
+
+
+            <div class="checkbox-field">
+
+                <input asp-for="RememberMe"
+                       type="checkbox" />
+
+                <label asp-for="RememberMe">
+                    Remember Me
+                </label>
+
+            </div>
+
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+
+        <div class="form-links">
+
+            <a asp-controller="Account"
+               asp-action="ForgotPassword">
+                Forgot password?
+            </a>
+
         </div>
 
-        <div class="form-field">
-            <label asp-for="Password">
-                Password
-            </label>
 
-            <br />
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-error">
 
-            <input asp-for="Password"
-                   type="password" />
+                @foreach (var error in ViewData.ModelState.Values
+                    .SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
 
-            <span asp-validation-for="Password"></span>
-        </div>
+            </div>
+        }
 
-        <div class="checkbox-field">
-            <input asp-for="RememberMe"
-                   type="checkbox" />
-
-            <label asp-for="RememberMe">
-                Remember Me
-            </label>
-        </div>
-
-        <button type="submit">
-            Login
-        </button>
-
-    </form>
-    <div class="form-links">
-        <a asp-controller="Account"
-           asp-action="ForgotPassword">
-            Forgot password?
-        </a>
-    </div>
-
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-error">
-
-            @foreach (var error in ViewData.ModelState.Values
-                .SelectMany(v => v.Errors))
-            {
-                <p>@error.ErrorMessage</p>
-            }
-
-        </div>
-    }
     </section>
+
 </div>
