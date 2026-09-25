@@ -1,3 +1,6 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
 ﻿<!DOCTYPE html>
 <html lang="en">
 
@@ -19,6 +22,9 @@
           href="~/css/site.css"
           asp-append-version="true" />
 
+    <link rel="stylesheet"
+          href="~/css/notification.css"
+          asp-append-version="true" />
 </head>
 
 <body>
@@ -122,6 +128,11 @@
 
     </header>
 
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <partial name="_NotificationBell" />
+    }
+
 
     <!-- ================= PAGE CONTENT ================= -->
 
@@ -158,6 +169,31 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    <script>
+        window.notificationConfig = {
+            urls: {
+                getAll: '@Url.Action("GetAll", "Notifications")',
+                create: '@Url.Action("Create", "Notifications")',
+                markAsRead: '@Url.Action("MarkAsRead", "Notifications")',
+                markAllAsRead: '@Url.Action("MarkAllAsRead", "Notifications")',
+                delete: '@Url.Action("Delete", "Notifications")',
+                clearAll: '@Url.Action("ClearAll", "Notifications")'
+            },
+            emailJs: {
+                publicKey: '@Configuration["EmailJS:PublicKey"]',
+                serviceId: '@Configuration["EmailJS:ServiceId"]',
+                templateId: '@Configuration["EmailJS:TemplateId"]',
+                defaultRecipientEmail: '@Configuration["EmailJS:DefaultRecipientEmail"]'
+            }
+        };
+    </script>
+
+    <script src="~/js/emailjs.js"
+            asp-append-version="true"></script>
+
+    <script src="~/js/notifications.js"
             asp-append-version="true"></script>
 
     <script>

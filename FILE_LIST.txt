@@ -1,0 +1,21 @@
+Notification-only MVC files
+
+.gitignore
+Controllers/NotificationsController.cs
+Models/Notification.cs
+Models/NotificationRequest.cs
+NotificationButtonOnly_MVC.csproj
+Program.cs
+README.md
+Services/INotificationService.cs
+Services/NotificationService.cs
+Views/Notifications/Index.cshtml
+Views/Shared/Error.cshtml
+Views/Shared/_Layout.cshtml
+Views/Shared/_NotificationBell.cshtml
+Views/_ViewImports.cshtml
+Views/_ViewStart.cshtml
+appsettings.json
+wwwroot/css/notification.css
+wwwroot/js/emailjs.js
+wwwroot/js/notifications.js

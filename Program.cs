@@ -3,12 +3,16 @@ using InventoryManagementSystem.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using NotificationButtonOnly_MVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Register MVC.
 builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
+
+// Register only notification logic.
+// Standalone storage uses a JSON file, so no EF Core/SQLite packages are needed.
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 var sqliteConnection = new SqliteConnection("Data Source=:memory:");
 sqliteConnection.Open();
@@ -57,9 +61,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.MapGet("/", context =>
@@ -71,12 +73,8 @@ app.MapGet("/", context =>
 app.UseAuthentication();
 app.UseAuthorization();
 
-// MVC routing
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-// Razor Pages routing
-app.MapRazorPages();
 
 app.Run();

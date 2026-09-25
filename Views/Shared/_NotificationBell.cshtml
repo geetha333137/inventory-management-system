@@ -1,0 +1,87 @@
+<!--
+    ============================================================
+    ONLY NOTIFICATION UI
+    ============================================================
+
+    This partial is the only visual component contributed by
+    this standalone module.
+
+    It contains:
+        - notification bell
+        - unread count
+        - notification dropdown
+        - mark all as read
+        - delete
+        - clear all
+
+    No page header is included.
+
+    For the team project, copy this partial into Views/Shared and
+    add it to the team's existing layout.
+-->
+
+<div class="notification-container">
+
+    <!-- THE ONLY VISIBLE BUTTON -->
+    <button type="button"
+            id="notificationButton"
+            class="notification-button"
+            aria-label="Open notifications"
+            aria-expanded="false">
+
+        <span class="notification-icon">
+            🔔
+        </span>
+
+        <!-- Red unread count badge. -->
+        <span id="notificationCount"
+              class="notification-count hidden">
+            0
+        </span>
+
+    </button>
+
+    <!-- Dropdown is hidden until the bell is clicked. -->
+    <div id="notificationPanel"
+         class="notification-panel"
+         aria-hidden="true">
+
+        <div class="notification-panel-header">
+
+            <h3>Notifications</h3>
+
+            <!-- Marks every notification as read. -->
+            <button type="button"
+                    id="markAllButton"
+                    class="mark-all-button">
+                Mark all as read
+            </button>
+
+        </div>
+
+        <!-- JavaScript fills this area from the C# endpoint. -->
+        <div id="notificationList">
+
+            <div class="empty-notification">
+                No notifications
+            </div>
+
+        </div>
+
+        <div class="notification-panel-footer">
+
+            <!-- Removes all notifications after confirmation. -->
+            <button type="button"
+                    id="clearAllButton"
+                    class="clear-all-button">
+                Clear All
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Required by the controller POST actions. -->
+@Html.AntiForgeryToken()

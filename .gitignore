@@ -3,3 +3,6 @@ obj/
 .vs/
 *.user
 *.suo
+notifications.json
+appsettings.Local.json
+secrets.json
