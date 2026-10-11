@@ -51,7 +51,12 @@ public class AccountController : Controller
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            return RedirectToAction("Index", "Dashboard");
+            if (User.IsInRole("Asset Manager") || User.IsInRole("Inventory Executive"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            return RedirectToAction("UserDashboard", "Dashboard");
         }
 
         return View();
@@ -130,9 +135,12 @@ public class AccountController : Controller
             principal,
             authProperties);
 
-        return RedirectToAction(
-            "Index",
-            "Dashboard");
+        if (user.Role.Name == "Asset Manager" || user.Role.Name == "Inventory Executive")
+        {
+            return RedirectToAction("Index", "Dashboard");
+        }
+
+        return RedirectToAction("UserDashboard", "Dashboard");
     }
 
     // =========================================================

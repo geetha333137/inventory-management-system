@@ -12,7 +12,10 @@
             <p class="helper-text mb-0">Complete information for this inventory item.</p>
         </div>
         <div class="d-flex gap-2">
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+            @if (User.IsInRole("Asset Manager"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+            }
             <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
         </div>
     </div>

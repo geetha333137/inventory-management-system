@@ -45,6 +45,13 @@ namespace InventoryManagementSystem.Services
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<User?> GetProfileAsync(int id)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
         public async Task<List<Role>> GetRolesAsync()
         {
             return await _context.Roles
@@ -122,6 +129,40 @@ namespace InventoryManagementSystem.Services
 
             await _context.SaveChangesAsync();
 
+            return true;
+        }
+
+        public async Task<bool> UpdateOwnProfileAsync(
+            int id,
+            EditProfileViewModel model)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            var username = model.Username.Trim();
+            var email = model.Email.Trim();
+
+            var duplicate = await _context.Users.AnyAsync(u =>
+                u.Id != id &&
+                (u.Username == username || u.Email == email));
+
+            if (duplicate)
+            {
+                return false;
+            }
+
+            user.Username = username;
+            user.FullName = model.FullName.Trim();
+            user.Email = email;
+            user.PhoneNumber = model.PhoneNumber?.Trim();
+            user.UpdatedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
             return true;
         }
 

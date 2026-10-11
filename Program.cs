@@ -12,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Register MVC
 builder.Services.AddControllersWithViews();
 
+// Configure Antiforgery for AJAX calls
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
+
 // Register notification logic
 builder.Services.AddScoped<INotificationService, NotificationService>();
 

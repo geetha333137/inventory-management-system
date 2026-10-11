@@ -1,9 +1,25 @@
 @model DashboardViewModel
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+
 @{
     var maxCategoryCount = Model.AssetsByCategory.Any() ? Model.AssetsByCategory.Max(x => x.Value) : 0;
     var maxStatusCount = Model.AssetsByStatus.Any() ? Model.AssetsByStatus.Max(x => x.Value) : 0;
 }
+
+<div class="dashboard-page">
+    <div class="dashboard-intro">
+        <div>
+            <span class="dashboard-intro-mark" aria-hidden="true"><i class="bi bi-grid-1x2-fill"></i></span>
+            <div>
+                <p class="dashboard-eyebrow">Workspace overview</p>
+                <p class="dashboard-intro-copy">A clear view of your assets, stock, and recent activity.</p>
+            </div>
+        </div>
+        <span class="dashboard-live"><span></span> Live overview</span>
+    </div>
 
 <div class="row g-3 mb-4">
     <div class="col-6 col-xl-3">
@@ -156,7 +172,7 @@
                             <span>@status.Label</span>
                             <strong>@status.Value</strong>
                         </div>
-                        <div class="progress-track">
+                        <div class="progress-track" role="progressbar" aria-label="@status.Label assets" aria-valuenow="@status.Value" aria-valuemin="0" aria-valuemax="@maxStatusCount">
                             <span style="width: @width%"></span>
                         </div>
                     </div>
@@ -190,7 +206,7 @@
                             <span>@category.Label</span>
                             <strong>@category.Value</strong>
                         </div>
-                        <div class="progress-track mini">
+                        <div class="progress-track mini" role="progressbar" aria-label="@category.Label assets" aria-valuenow="@category.Value" aria-valuemin="0" aria-valuemax="@maxCategoryCount">
                             <span style="width: @width%"></span>
                         </div>
                     </div>
@@ -313,4 +329,6 @@
             }
         </div>
     </div>
+</div>
+
 </div>

@@ -27,17 +27,38 @@ public static class SeedData
         }
 
         var inventoryExecutiveRole = db.Roles
-            .FirstOrDefault(r => r.Name == "Inventory Executive");
+            .FirstOrDefault(r => r.Name == "Inventory Executive" || r.Name == "Inventory Viewer");
 
         if (inventoryExecutiveRole == null)
         {
             inventoryExecutiveRole = new Role
             {
                 Name = "Inventory Executive",
-                Description = "Inventory and reporting access"
+                Description = "Operational inventory, asset, and reporting access"
             };
 
             db.Roles.Add(inventoryExecutiveRole);
+            db.SaveChanges();
+        }
+        else if (inventoryExecutiveRole.Name != "Inventory Executive")
+        {
+            inventoryExecutiveRole.Name = "Inventory Executive";
+            inventoryExecutiveRole.Description = "Operational inventory, asset, and reporting access";
+            db.SaveChanges();
+        }
+
+        var userRole = db.Roles
+            .FirstOrDefault(r => r.Name == "User" || r.Name == "Standard User");
+
+        if (userRole == null)
+        {
+            userRole = new Role
+            {
+                Name = "User",
+                Description = "Standard employee user with asset visibility and profile access"
+            };
+
+            db.Roles.Add(userRole);
             db.SaveChanges();
         }
 
@@ -75,7 +96,7 @@ public static class SeedData
         db.SaveChanges();
 
         // ============================
-        // CREATE ADMIN USER
+        // CREATE ADMIN USER (Asset Manager)
         // ============================
 
         var admin = db.Users
@@ -111,7 +132,7 @@ public static class SeedData
         }
 
         // ============================
-        // CREATE EMPLOYEE USER
+        // CREATE EMPLOYEE USER (Inventory Executive)
         // ============================
 
         var employee = db.Users
@@ -147,6 +168,52 @@ public static class SeedData
         }
 
         // ============================
+        // CREATE STANDARD USER (User Login)
+        // ============================
+
+        var standardUser = db.Users
+            .FirstOrDefault(u => u.Username == "user");
+
+        if (standardUser == null)
+        {
+            standardUser = new User
+            {
+                EmployeeId = "EMP003",
+                FirstName = "Alex",
+                LastName = "Taylor",
+                Username = "user",
+                Email = "user@inventory.com",
+                MobileNumber = "7777777777",
+                Department = "Operations",
+                RoleId = userRole.Id,
+                IsActive = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            };
+
+            var passwordHasher = new PasswordHasher<User>();
+
+            standardUser.PasswordHash =
+                passwordHasher.HashPassword(
+                    standardUser,
+                    "User@123");
+
+            db.Users.Add(standardUser);
+            db.SaveChanges();
+        }
+
+        // Ensure standard user has assigned demo equipment for dashboard preview
+        var userAsset = db.Assets.FirstOrDefault(a => a.AssetCode == "AST-000105");
+        if (userAsset != null && (userAsset.AssignedToUserId == null || userAsset.AssignedToUserId == 0))
+        {
+            userAsset.Status = AssetStatuses.Assigned;
+            userAsset.AssignedTo = $"{standardUser.FirstName} {standardUser.LastName}".Trim();
+            userAsset.AssignedToUserId = standardUser.Id;
+            userAsset.Department = standardUser.Department;
+            db.SaveChanges();
+        }
+
+        // ============================
         // ASSET MANAGER PERMISSIONS
         // ============================
 
@@ -172,7 +239,7 @@ public static class SeedData
         // INVENTORY EXECUTIVE PERMISSIONS
         // ============================
 
-        string[] employeePermissions =
+        string[] executivePermissions =
         {
             "VIEW_ASSET",
             "CREATE_ASSET",
@@ -183,22 +250,53 @@ public static class SeedData
             "VIEW_NOTIFICATIONS"
         };
 
-        foreach (var permissionName in employeePermissions)
+        foreach (var permissionName in executivePermissions)
         {
-            var permission = db.Permissions
-                .First(p => p.Name == permissionName);
-
-            bool exists = db.RolePermissions.Any(
-                rp => rp.RoleId == inventoryExecutiveRole.Id &&
-                      rp.PermissionId == permission.Id);
-
-            if (!exists)
+            var permission = db.Permissions.FirstOrDefault(p => p.Name == permissionName);
+            if (permission != null)
             {
-                db.RolePermissions.Add(new RolePermission
+                bool exists = db.RolePermissions.Any(
+                    rp => rp.RoleId == inventoryExecutiveRole.Id &&
+                          rp.PermissionId == permission.Id);
+
+                if (!exists)
                 {
-                    RoleId = inventoryExecutiveRole.Id,
-                    PermissionId = permission.Id
-                });
+                    db.RolePermissions.Add(new RolePermission
+                    {
+                        RoleId = inventoryExecutiveRole.Id,
+                        PermissionId = permission.Id
+                    });
+                }
+            }
+        }
+
+        // ============================
+        // STANDARD USER PERMISSIONS
+        // ============================
+
+        string[] userPermissions =
+        {
+            "VIEW_ASSET",
+            "VIEW_CATEGORY"
+        };
+
+        foreach (var permissionName in userPermissions)
+        {
+            var permission = db.Permissions.FirstOrDefault(p => p.Name == permissionName);
+            if (permission != null)
+            {
+                bool exists = db.RolePermissions.Any(
+                    rp => rp.RoleId == userRole.Id &&
+                          rp.PermissionId == permission.Id);
+
+                if (!exists)
+                {
+                    db.RolePermissions.Add(new RolePermission
+                    {
+                        RoleId = userRole.Id,
+                        PermissionId = permission.Id
+                    });
+                }
             }
         }
 

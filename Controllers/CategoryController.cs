@@ -16,19 +16,29 @@ namespace InventoryManagementSystem.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
             ViewData["Title"] = "Categories";
             ViewData["PageSubtitle"] = "Organise inventory by asset type.";
 
-            var categories = await _context.Categories
+            var query = _context.Categories
                 .Include(c => c.Assets)
-                .OrderBy(c => c.Name)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var term = search.Trim();
+                query = query.Where(category => category.Name.Contains(term) ||
+                                                (category.Description != null && category.Description.Contains(term)));
+            }
+
+            ViewBag.Search = search;
+            var categories = await query.OrderBy(category => category.Name).ToListAsync();
 
             return View(categories);
         }
 
+        [PermissionAuthorize("CREATE_ASSET")]
         public IActionResult Create()
         {
             ViewData["Title"] = "Add Category";
@@ -54,6 +64,7 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [PermissionAuthorize("CREATE_ASSET")]
         public async Task<IActionResult> Create(Category category)
         {
             if (await _context.Categories.AnyAsync(c => c.Name == category.Name))
@@ -73,6 +84,7 @@ namespace InventoryManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [PermissionAuthorize("EDIT_ASSET")]
         public async Task<IActionResult> Edit(int id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -89,6 +101,7 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [PermissionAuthorize("EDIT_ASSET")]
         public async Task<IActionResult> Edit(int id, Category category)
         {
             if (id != category.Id)
@@ -113,6 +126,7 @@ namespace InventoryManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [PermissionAuthorize("DELETE_ASSET")]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _context.Categories
@@ -131,6 +145,7 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [PermissionAuthorize("DELETE_ASSET")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var category = await _context.Categories

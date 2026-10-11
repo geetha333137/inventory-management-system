@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagementSystem.Controllers
 {
-    [Authorize(Roles = "Asset Manager")]
+    [Authorize(Roles = "Asset Manager, Inventory Executive")]
     public class OrganisationController : Controller
     {
         private readonly AppDbContext _context;
@@ -57,6 +57,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         // SHOW CREATE FORM
+        [Authorize(Roles = "Asset Manager")]
         public IActionResult Create()
         {
             return View(new Organisation
@@ -76,6 +77,7 @@ namespace InventoryManagementSystem.Controllers
 
         // SAVE NEW ORGANISATION
         [HttpPost]
+        [Authorize(Roles = "Asset Manager")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             Organisation organisation,
@@ -121,6 +123,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         // SHOW EDIT FORM
+        [Authorize(Roles = "Asset Manager")]
         public async Task<IActionResult> Edit()
         {
             var organisation = await _context.Organisations
@@ -136,6 +139,7 @@ namespace InventoryManagementSystem.Controllers
 
         // SAVE EDITED ORGANISATION
         [HttpPost]
+        [Authorize(Roles = "Asset Manager")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
@@ -218,6 +222,7 @@ namespace InventoryManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+[Authorize(Roles = "Asset Manager")]
 [ValidateAntiForgeryToken]
 public async Task<IActionResult> Delete(int id)
 {

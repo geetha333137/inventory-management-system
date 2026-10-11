@@ -1,0 +1,69 @@
+@model InventoryManagementSystem.ViewModels.AssetAssignmentsViewModel
+
+@{
+    ViewData["Title"] = "Asset Assignments";
+}
+
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+    <div>
+        <p class="dashboard-eyebrow">Workspace</p>
+        <h2 class="fw-bold mb-1">Asset Assignments</h2>
+        <p class="text-muted mb-0">Review who each asset is assigned to and update assignments from the asset record.</p>
+    </div>
+</div>
+
+<div class="dashboard-panel">
+    @if (Model.Assignments.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Assigned User</th>
+                        <th>Department</th>
+                        <th>Assignment Status</th>
+                        <th>Assignment Date</th>
+                        <th class="text-end">Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var assignment in Model.Assignments)
+                {
+                    <tr>
+                        <td>
+                            <strong>@assignment.AssetName</strong>
+                            <small class="d-block text-muted">@assignment.AssetCode</small>
+                        </td>
+                        <td>@assignment.AssignedUser</td>
+                        <td>@assignment.Department</td>
+                        <td>
+                            @if (assignment.AssignmentStatus == "Assigned")
+                            {
+                                <span class="status-badge badge-assigned">Assigned</span>
+                            }
+                            else
+                            {
+                                <span class="status-badge badge-available">Unassigned</span>
+                            }
+                        </td>
+                        <td>@assignment.AssignmentDate.ToLocalTime().ToString("dd MMM yyyy")</td>
+                        <td class="text-end">
+                            <a asp-controller="Asset"
+                               asp-action="Edit"
+                               asp-route-id="@assignment.AssetId"
+                               class="btn btn-sm btn-outline-primary">
+                                Manage
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">No asset assignments are available.</div>
+    }
+</div>

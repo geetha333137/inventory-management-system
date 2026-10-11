@@ -1,0 +1,48 @@
+@model InventoryManagementSystem.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="content-card">
+    <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <p class="eyebrow">Account</p>
+            <h1>Your profile</h1>
+            <p class="helper-text mb-0">Review your personal StockSphere account information.</p>
+        </div>
+        <a asp-action="Edit" class="btn btn-primary">Edit Profile</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="detail-list">
+        <div class="detail-item">
+            <span class="detail-label">Username</span>
+            <strong>@Model.Username</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Full Name</span>
+            <strong>@Model.FullName</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Email</span>
+            <strong>@Model.Email</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Phone</span>
+            <strong>@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "Not provided" : Model.PhoneNumber)</strong>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Role</span>
+            <strong>@Model.Role</strong>
+        </div>
+    </div>
+
+    <div class="form-links">
+        <a asp-controller="Account" asp-action="ChangePassword">Change Password</a>
+    </div>
+</div>

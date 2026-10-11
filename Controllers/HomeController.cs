@@ -14,7 +14,12 @@ namespace InventoryManagementSystem.Controllers
         [Authorize]
         public IActionResult Dashboard()
         {
-            return RedirectToAction("Index", "Dashboard");
+            if (User.IsInRole("Asset Manager") || User.IsInRole("Inventory Executive"))
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            return RedirectToAction("UserDashboard", "Dashboard");
         }
 
         public IActionResult Error()
